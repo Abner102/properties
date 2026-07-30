@@ -52,28 +52,28 @@ export default function CarsContent({ cars }: { cars: Car[] }) {
               placeholder="Search cars..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/5 border border-border focus:outline-none focus:border-gold/50"
+              className="w-full pl-11 pr-4 py-3 rounded-xl bg-muted border border-border focus:outline-none focus:border-gold/50"
             />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            <select value={brand} onChange={(e) => setBrand(e.target.value)} className="px-3 py-2.5 rounded-xl bg-white/5 border border-border text-sm focus:outline-none focus:border-gold/50">
+            <select value={brand} onChange={(e) => setBrand(e.target.value)} className="px-3 py-2.5 rounded-xl bg-muted border border-border text-sm focus:outline-none focus:border-gold/50">
               <option value="">All Brands</option>
               {brands.map((b) => <option key={b} value={b}>{b}</option>)}
             </select>
-            <select value={fuel} onChange={(e) => setFuel(e.target.value)} className="px-3 py-2.5 rounded-xl bg-white/5 border border-border text-sm focus:outline-none focus:border-gold/50">
+            <select value={fuel} onChange={(e) => setFuel(e.target.value)} className="px-3 py-2.5 rounded-xl bg-muted border border-border text-sm focus:outline-none focus:border-gold/50">
               <option value="">All Fuel</option>
               <option value="petrol">Petrol</option>
               <option value="diesel">Diesel</option>
               <option value="electric">Electric</option>
               <option value="hybrid">Hybrid</option>
             </select>
-            <select value={transmission} onChange={(e) => setTransmission(e.target.value)} className="px-3 py-2.5 rounded-xl bg-white/5 border border-border text-sm focus:outline-none focus:border-gold/50">
+            <select value={transmission} onChange={(e) => setTransmission(e.target.value)} className="px-3 py-2.5 rounded-xl bg-muted border border-border text-sm focus:outline-none focus:border-gold/50">
               <option value="">Transmission</option>
               <option value="automatic">Automatic</option>
               <option value="manual">Manual</option>
             </select>
-            <input type="number" placeholder="Max Price" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} className="px-3 py-2.5 rounded-xl bg-white/5 border border-border text-sm focus:outline-none focus:border-gold/50" />
-            <label className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white/5 border border-border text-sm cursor-pointer">
+            <input type="number" placeholder="Max Price" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} className="px-3 py-2.5 rounded-xl bg-muted border border-border text-sm focus:outline-none focus:border-gold/50" />
+            <label className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-muted border border-border text-sm cursor-pointer">
               <input type="checkbox" checked={luxuryOnly} onChange={(e) => setLuxuryOnly(e.target.checked)} className="accent-gold" />
               Luxury Only
             </label>

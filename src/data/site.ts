@@ -1,10 +1,10 @@
 export const siteConfig = {
   name: "Endless Infinity Properties",
   shortName: "Endless Infinity",
-  tagline: "Building the future through real estate, technology, and strategic property investment",
+  tagline: "Property. Technology. Enduring wealth.",
   altTagline: "Building the future through real estate, technology, and strategic property investment",
   description:
-    "Endless Infinity Properties is a Nigerian technology-driven real estate company combining property sales, land acquisition, luxury vehicles, software development, and digital transformation under one premium brand.",
+    "A Nigerian technology-driven real estate company for premium property, land, vehicles, and custom software.",
   url: import.meta.env.VITE_SITE_URL || "https://endlessinfinity.ng",
   phone: "07065109007",
   whatsapp: "2347065109007",
@@ -74,11 +74,11 @@ export const industries = [
 export const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
-  { href: "/team", label: "Our Team" },
+  { href: "/team", label: "Team" },
   { href: "/properties", label: "Properties" },
   { href: "/land", label: "Land" },
   { href: "/cars", label: "Cars" },
-  { href: "/software", label: "Software Services" },
+  { href: "/software", label: "Software" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/blog", label: "Blog" },
   { href: "/careers", label: "Careers" },

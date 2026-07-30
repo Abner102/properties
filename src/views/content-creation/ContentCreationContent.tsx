@@ -20,12 +20,12 @@ const services = [
 ];
 
 const gallery = [
-  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=400&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=400&fit=crop",
+  "/images/property-1.jpg",
+  "/images/car-mercedes.jpg",
+  "/images/blog-3.jpg",
+  "/images/property-6.jpg",
+  "/images/property-4.jpg",
+  "/images/tech-1.jpg",
 ];
 
 export default function ContentCreationContent() {

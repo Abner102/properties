@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getProductsByCategories, toProperty } from "@/lib/products-client";
 import type { Property } from "@/data/properties";
 import PropertiesContent from "@/views/properties/PropertiesContent";
+import PageLoader from "@/components/ui/PageLoader";
 
 export default function PropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -14,7 +15,7 @@ export default function PropertiesPage() {
   }, []);
 
   if (loading) {
-    return <div className="pt-32 text-center text-muted-foreground">Loading properties...</div>;
+    return <PageLoader label="Loading properties" />;
   }
 
   return <PropertiesContent properties={properties} />;

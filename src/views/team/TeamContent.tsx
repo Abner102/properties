@@ -25,8 +25,7 @@ interface PublicTeamMember {
   isFounder?: boolean;
 }
 
-const fallbackImage =
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=800&fit=crop";
+const fallbackImage = "/images/team-1.jpg";
 
 function mapStaticToPublic(): PublicTeamMember[] {
   const founderRows: PublicTeamMember[] = staticFounders.map((f) => ({

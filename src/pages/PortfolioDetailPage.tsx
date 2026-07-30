@@ -3,6 +3,7 @@ import { ArrowLeft, ExternalLink, CheckCircle } from "lucide-react";
 import ProjectCover from "@/components/ui/ProjectCover";
 import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
+import PageLoader from "@/components/ui/PageLoader";
 import { usePortfolioProject } from "@/hooks/usePortfolioProjects";
 
 export default function PortfolioDetailPage() {
@@ -10,11 +11,7 @@ export default function PortfolioDetailPage() {
   const { project, loading, notFound } = usePortfolioProject(slug);
 
   if (loading) {
-    return (
-      <div className="pt-32 text-center text-muted-foreground">
-        Loading project...
-      </div>
-    );
+    return <PageLoader label="Loading project" />;
   }
 
   if (notFound || !project) return <Navigate to="/404" replace />;

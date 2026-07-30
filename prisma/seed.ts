@@ -62,7 +62,7 @@ async function main() {
       status: "published",
       featured: true,
       amenities: ["Swimming Pool", "Gym", "24/7 Security", "Smart Home"],
-      coverImage: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&h=800&fit=crop",
+      coverImage: "/images/property-1.jpg",
       description: "Stunning penthouse with panoramic lagoon views.",
     },
     {
@@ -75,7 +75,7 @@ async function main() {
       landSize: 1000,
       status: "published",
       featured: true,
-      coverImage: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&h=800&fit=crop",
+      coverImage: "/images/land-1.jpg",
       description: "Prime land with C of O in Ikeja GRA.",
     },
     {
@@ -90,7 +90,7 @@ async function main() {
       transmission: "automatic",
       status: "published",
       featured: true,
-      coverImage: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+      coverImage: "/images/car-mercedes.jpg",
       description: "Brand new Mercedes-Benz S-Class with full options.",
     },
   ];

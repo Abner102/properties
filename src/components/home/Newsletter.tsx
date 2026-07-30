@@ -29,24 +29,27 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="section-padding bg-muted/30">
-      <div className="max-w-3xl mx-auto text-center px-6">
-        <SectionHeading title="Stay Updated" description="Get the latest on properties, tech insights, and investment opportunities." />
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 mt-6">
+    <section className="section-padding">
+      <div className="max-w-2xl mx-auto text-center px-6">
+        <SectionHeading
+          title="Stay informed"
+          description="Market notes, new listings, and technology insights — delivered sparingly."
+        />
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-0 border border-border overflow-hidden mt-2">
           <input
             type="email"
             required
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="flex-1 px-5 py-3 rounded-full bg-background border border-border focus:outline-none focus:border-gold/50"
+            className="flex-1 px-5 py-3.5 bg-transparent focus:outline-none text-sm"
           />
-          <Button type="submit" disabled={status === "loading"}>
-            {status === "loading" ? "Subscribing..." : "Subscribe"}
+          <Button type="submit" disabled={status === "loading"} className="rounded-none sm:min-w-[140px]">
+            {status === "loading" ? "..." : "Subscribe"}
           </Button>
         </form>
-        {status === "success" && <p className="text-gold text-sm mt-3">Thank you for subscribing!</p>}
-        {status === "error" && <p className="text-red-400 text-sm mt-3">Something went wrong. Please try again.</p>}
+        {status === "success" && <p className="text-gold text-sm mt-4">Thank you for subscribing.</p>}
+        {status === "error" && <p className="text-red-400 text-sm mt-4">Something went wrong. Please try again.</p>}
       </div>
     </section>
   );

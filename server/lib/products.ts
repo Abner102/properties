@@ -65,7 +65,7 @@ function mapDbProduct(p: Product): PublicProduct {
     bedrooms: p.bedrooms,
     bathrooms: p.bathrooms,
     area: p.squareMeter || p.landSize || 0,
-    images: allImages.length ? allImages : ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop"],
+    images: allImages.length ? allImages : ["/images/property-1.jpg"],
     coverImage: cover,
     featured: p.featured,
     description: p.description,

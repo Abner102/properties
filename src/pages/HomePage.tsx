@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ArrowUpRight } from "lucide-react";
 import Hero from "@/components/home/Hero";
 import Stats from "@/components/home/Stats";
 import FeaturedProperties from "@/components/home/FeaturedProperties";
@@ -9,14 +10,12 @@ import WhyChooseUs from "@/components/home/WhyChooseUs";
 import Newsletter from "@/components/home/Newsletter";
 import CTASection from "@/components/home/CTASection";
 import AppImage from "@/components/ui/AppImage";
+import FadeIn from "@/components/ui/FadeIn";
 import { formatPrice } from "@/lib/utils";
 import SectionHeading from "@/components/ui/SectionHeading";
-import GlassCard from "@/components/ui/GlassCard";
 import { getProductsByCategories, toCar, toLandListing } from "@/lib/products-client";
 import type { Car } from "@/data/cars";
 import type { LandListing } from "@/lib/products-client";
-
-const partners = ["Sotheby's Partner", "Lagos Realtors", "Naija Tech Hub", "Plateau Dev", "LuxHomes NG", "FinTech Alliance"];
 
 export default function HomePage() {
   const [featuredCars, setFeaturedCars] = useState<Car[]>([]);
@@ -38,51 +37,65 @@ export default function HomePage() {
       <Stats />
       <FeaturedProperties />
 
-      <section className="section-padding bg-muted/30">
+      <section className="section-padding">
         <div className="max-w-7xl mx-auto">
-          <SectionHeading subtitle="Automotive" title="Featured Cars" />
-          <div className="grid md:grid-cols-3 gap-6">
-            {featuredCars.map((car) => (
-              <Link key={car.id} to={`/cars/${car.id}`}>
-                <GlassCard className="overflow-hidden p-0 group">
-                  <div className="relative aspect-video">
-                    <AppImage src={car.images[0]} alt={car.model} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="33vw" />
-                  </div>
-                  <div className="p-5">
-                    <p className="text-sm text-muted-foreground">{car.brand}</p>
-                    <h3 className="font-bold">{car.model}</h3>
-                    <p className="text-gold font-bold mt-1">{formatPrice(car.price)}</p>
-                  </div>
-                </GlassCard>
-              </Link>
-            ))}
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12 md:mb-16">
+            <SectionHeading
+              subtitle="Automotive"
+              title="Featured Cars"
+              description="Curated luxury and performance vehicles ready for delivery."
+              align="left"
+              className="mb-0"
+            />
+            <Link to="/cars" className="text-sm font-semibold tracking-wide uppercase text-gold link-underline inline-flex items-center gap-1 shrink-0">
+              View all <ArrowUpRight size={14} />
+            </Link>
           </div>
-          <div className="text-center mt-8">
-            <Link to="/cars" className="text-gold hover:text-gold-light font-semibold">View All Cars →</Link>
+          <div className="grid md:grid-cols-3 gap-8 md:gap-10">
+            {featuredCars.map((car, i) => (
+              <FadeIn key={car.id} delay={i * 0.08}>
+                <Link to={`/cars/${car.id}`} className="group block">
+                  <div className="relative aspect-[16/10] overflow-hidden bg-muted mb-4">
+                    <AppImage
+                      src={car.images[0]}
+                      alt={car.model}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      sizes="33vw"
+                    />
+                  </div>
+                  <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{car.brand}</p>
+                  <h3 className="font-display text-2xl mt-1 group-hover:text-gold transition-colors">{car.model}</h3>
+                  <p className="text-gold font-semibold mt-2">{formatPrice(car.price)}</p>
+                </Link>
+              </FadeIn>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="section-padding">
+      <section className="section-padding bg-muted/40">
         <div className="max-w-7xl mx-auto">
-          <SectionHeading subtitle="Land" title="Latest Land Listings" />
-          <div className="grid md:grid-cols-2 gap-6">
-            {landListings.map((land) => (
-              <Link key={land.id} to="/land">
-                <GlassCard className="overflow-hidden p-0 group">
-                  <div className="grid sm:grid-cols-2">
-                    <div className="relative aspect-video sm:aspect-auto min-h-[160px]">
-                      <AppImage src={land.image} alt={land.title} fill className="object-cover" sizes="300px" />
-                    </div>
-                    <div className="p-5">
-                      <span className="text-xs text-gold font-semibold uppercase">{land.category}</span>
-                      <h3 className="font-bold mt-1">{land.title}</h3>
-                      <p className="text-sm text-muted-foreground">{land.state}</p>
-                      <p className="text-gold font-bold mt-2">{formatPrice(land.price)}</p>
-                    </div>
+          <SectionHeading
+            subtitle="Land"
+            title="Latest Land Listings"
+            description="Verified titles and prime locations for development and investment."
+          />
+          <div className="grid md:grid-cols-2 gap-8">
+            {landListings.map((land, i) => (
+              <FadeIn key={land.id} delay={i * 0.1}>
+                <Link to="/land" className="group grid sm:grid-cols-2 gap-0 overflow-hidden bg-card border border-border">
+                  <div className="relative aspect-[4/3] sm:aspect-auto sm:min-h-[220px]">
+                    <AppImage src={land.image} alt={land.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="300px" />
                   </div>
-                </GlassCard>
-              </Link>
+                  <div className="p-6 md:p-8 flex flex-col justify-center">
+                    <span className="text-[11px] tracking-[0.2em] uppercase text-gold font-semibold">{land.category}</span>
+                    <h3 className="font-display text-2xl md:text-3xl mt-2 group-hover:text-gold transition-colors">{land.title}</h3>
+                    <p className="text-sm text-muted-foreground mt-2">{land.state}</p>
+                    <p className="text-gold font-semibold text-lg mt-4">{formatPrice(land.price)}</p>
+                  </div>
+                </Link>
+              </FadeIn>
             ))}
           </div>
         </div>
@@ -90,18 +103,6 @@ export default function HomePage() {
 
       <FeaturedProjects />
       <Testimonials />
-
-      <section className="section-padding bg-muted/30">
-        <div className="max-w-7xl mx-auto text-center">
-          <SectionHeading subtitle="Partners" title="Trusted By Industry Leaders" />
-          <div className="flex flex-wrap justify-center gap-6">
-            {partners.map((p) => (
-              <div key={p} className="px-6 py-4 glass rounded-xl text-sm font-medium text-muted-foreground">{p}</div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <WhyChooseUs />
       <Newsletter />
       <CTASection />

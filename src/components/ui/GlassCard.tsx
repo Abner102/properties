@@ -13,7 +13,7 @@ export default function GlassCard({ children, className, hover = true }: GlassCa
   return (
     <motion.div
       whileHover={hover ? { y: -4, transition: { duration: 0.3 } } : undefined}
-      className={cn("glass rounded-2xl p-6", className)}
+      className={cn("glass p-6", className)}
     >
       {children}
     </motion.div>

@@ -1,6 +1,8 @@
 import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import SiteChrome from "@/components/layout/SiteChrome";
+import RouteProgress from "@/components/layout/RouteProgress";
+import PageLoader from "@/components/ui/PageLoader";
 import HomePage from "@/pages/HomePage";
 import AboutPage from "@/pages/AboutPage";
 import TeamPage from "@/pages/TeamPage";
@@ -27,11 +29,7 @@ function ProtectedAdminRoute() {
   const status = useAdminSession();
 
   if (status === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-muted/30 text-muted-foreground">
-        Checking session...
-      </div>
-    );
+    return <PageLoader variant="fullscreen" label="Checking session" />;
   }
 
   if (status === "guest") {
@@ -45,11 +43,7 @@ function AdminGuestRoute() {
   const status = useAdminSession();
 
   if (status === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-muted/30 text-muted-foreground">
-        Checking session...
-      </div>
-    );
+    return <PageLoader variant="fullscreen" label="Checking session" />;
   }
 
   if (status === "authed") {
@@ -70,6 +64,7 @@ function PublicLayout() {
 export default function App() {
   return (
     <ThemeProvider>
+      <RouteProgress />
       <Routes>
         <Route element={<AdminGuestRoute />}>
           <Route path="/admin/login" element={<AdminLoginPage />} />

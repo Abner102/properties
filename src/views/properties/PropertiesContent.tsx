@@ -59,20 +59,20 @@ export default function PropertiesContent({ properties }: { properties: Property
                 placeholder="Search properties..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/5 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-gold/50"
+                className="w-full pl-11 pr-4 py-3 rounded-xl bg-muted border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-gold/50"
               />
             </div>
             <div className="flex gap-2">
               <button
                 onClick={() => setView("grid")}
-                className={`p-3 rounded-xl transition-colors ${view === "grid" ? "bg-gold text-background" : "glass hover:bg-white/10"}`}
+                className={`p-3 rounded-xl transition-colors ${view === "grid" ? "bg-gold text-background" : "glass hover:bg-muted"}`}
                 aria-label="Grid view"
               >
                 <Grid3X3 size={18} />
               </button>
               <button
                 onClick={() => setView("map")}
-                className={`p-3 rounded-xl transition-colors ${view === "map" ? "bg-gold text-background" : "glass hover:bg-white/10"}`}
+                className={`p-3 rounded-xl transition-colors ${view === "map" ? "bg-gold text-background" : "glass hover:bg-muted"}`}
                 aria-label="Map view"
               >
                 <Map size={18} />
@@ -84,7 +84,7 @@ export default function PropertiesContent({ properties }: { properties: Property
             <select
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              className="px-3 py-2.5 rounded-xl bg-white/5 border border-border text-sm focus:outline-none focus:border-gold/50"
+              className="px-3 py-2.5 rounded-xl bg-muted border border-border text-sm focus:outline-none focus:border-gold/50"
             >
               <option value="">All Cities</option>
               {cities.map((c) => (
@@ -94,7 +94,7 @@ export default function PropertiesContent({ properties }: { properties: Property
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
-              className="px-3 py-2.5 rounded-xl bg-white/5 border border-border text-sm focus:outline-none focus:border-gold/50"
+              className="px-3 py-2.5 rounded-xl bg-muted border border-border text-sm focus:outline-none focus:border-gold/50"
             >
               <option value="">All Types</option>
               {types.map((t) => (
@@ -106,19 +106,19 @@ export default function PropertiesContent({ properties }: { properties: Property
               placeholder="Min Price"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
-              className="px-3 py-2.5 rounded-xl bg-white/5 border border-border text-sm focus:outline-none focus:border-gold/50"
+              className="px-3 py-2.5 rounded-xl bg-muted border border-border text-sm focus:outline-none focus:border-gold/50"
             />
             <input
               type="number"
               placeholder="Max Price"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
-              className="px-3 py-2.5 rounded-xl bg-white/5 border border-border text-sm focus:outline-none focus:border-gold/50"
+              className="px-3 py-2.5 rounded-xl bg-muted border border-border text-sm focus:outline-none focus:border-gold/50"
             />
             <select
               value={bedrooms}
               onChange={(e) => setBedrooms(e.target.value)}
-              className="px-3 py-2.5 rounded-xl bg-white/5 border border-border text-sm focus:outline-none focus:border-gold/50"
+              className="px-3 py-2.5 rounded-xl bg-muted border border-border text-sm focus:outline-none focus:border-gold/50"
             >
               <option value="">Bedrooms</option>
               {[1, 2, 3, 4, 5, 6].map((b) => (
@@ -162,7 +162,7 @@ export default function PropertiesContent({ properties }: { properties: Property
                   <a
                     key={p.id}
                     href={`/properties/${p.id}`}
-                    className="px-3 py-1 text-xs rounded-full bg-white/5 hover:bg-gold/20 transition-colors"
+                    className="px-3 py-1 text-xs rounded-full bg-muted hover:bg-gold/20 transition-colors"
                   >
                     {p.title}
                   </a>

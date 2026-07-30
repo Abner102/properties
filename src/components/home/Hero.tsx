@@ -6,29 +6,62 @@ import { siteConfig } from "@/data/site";
 
 export default function Hero() {
   return (
-    <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
-      <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" poster="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&h=1080&fit=crop">
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-a-luxurious-neighborhood-4248-large.mp4" type="video/mp4" />
-      </video>
+    <section className="relative h-screen min-h-[680px] flex items-end sm:items-center overflow-hidden">
+      <img
+        src="/images/hero.jpg"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover hero-media"
+      />
       <div className="absolute inset-0 hero-overlay" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
-        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-gold text-sm font-semibold tracking-[0.25em] uppercase mb-6">
-          {siteConfig.shortName}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pb-20 pt-32 sm:py-0 text-white">
+        <motion.p
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-none tracking-tight"
+        >
+          Endless <span className="text-gold">Infinity</span>
         </motion.p>
 
-        <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] max-w-5xl mx-auto">
+        <motion.h1
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-6 max-w-2xl font-display text-2xl sm:text-3xl md:text-4xl font-medium leading-snug text-white/95"
+        >
           {siteConfig.tagline}
         </motion.h1>
 
-        <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="mt-6 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+        <motion.p
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-5 max-w-xl text-base md:text-lg text-white/70 leading-relaxed"
+        >
           {siteConfig.description}
         </motion.p>
 
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-          <Link to="/properties"><Button size="lg">Explore Properties <ArrowRight size={20} /></Button></Link>
-          <Link to="/software"><Button variant="outline" size="lg">Our Services</Button></Link>
-          <Link to="/contact"><Button variant="secondary" size="lg">Contact Us</Button></Link>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.34, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-10 flex flex-col sm:flex-row gap-3"
+        >
+          <Link to="/properties">
+            <Button size="lg">
+              Explore Properties <ArrowRight size={18} />
+            </Button>
+          </Link>
+          <Link to="/contact">
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-white/35 text-white hover:border-gold hover:bg-gold hover:text-background"
+            >
+              Book a Consultation
+            </Button>
+          </Link>
         </motion.div>
       </div>
     </section>

@@ -58,7 +58,7 @@ export default function BlogContent() {
               key={cat}
               onClick={() => setFilter(cat)}
               className={`px-5 py-2 rounded-full text-sm font-medium capitalize transition-colors ${
-                filter === cat ? "bg-gold text-background" : "glass hover:bg-white/10"
+                filter === cat ? "bg-gold text-background" : "glass hover:bg-muted"
               }`}
             >
               {cat === "all" ? "All" : cat.replace("-", " ")}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getProductsByCategories, toCar } from "@/lib/products-client";
 import type { Car } from "@/data/cars";
 import CarsContent from "@/views/cars/CarsContent";
+import PageLoader from "@/components/ui/PageLoader";
 
 export default function CarsPage() {
   const [cars, setCars] = useState<Car[]>([]);
@@ -14,7 +15,7 @@ export default function CarsPage() {
   }, []);
 
   if (loading) {
-    return <div className="pt-32 text-center text-muted-foreground">Loading vehicles...</div>;
+    return <PageLoader label="Loading vehicles" />;
   }
 
   return <CarsContent cars={cars} />;

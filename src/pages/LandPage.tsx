@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getProductsByCategories, toLandListing } from "@/lib/products-client";
 import type { LandListing } from "@/lib/products-client";
 import LandContent from "@/views/land/LandContent";
+import PageLoader from "@/components/ui/PageLoader";
 
 export default function LandPage() {
   const [lands, setLands] = useState<LandListing[]>([]);
@@ -14,7 +15,7 @@ export default function LandPage() {
   }, []);
 
   if (loading) {
-    return <div className="pt-32 text-center text-muted-foreground">Loading land listings...</div>;
+    return <PageLoader label="Loading land listings" />;
   }
 
   return <LandContent lands={lands} />;

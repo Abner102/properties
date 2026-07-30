@@ -5,17 +5,27 @@ import { siteConfig } from "@/data/site";
 
 export default function CTASection() {
   return (
-    <section className="section-padding">
+    <section className="section-padding pt-0">
       <div className="max-w-7xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative rounded-3xl overflow-hidden p-12 md:p-16 text-center">
-          <div className="absolute inset-0 gold-gradient opacity-10" />
-          <div className="absolute inset-0 glass" />
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="relative overflow-hidden border border-border bg-muted/50 px-8 py-16 md:px-16 md:py-20 text-center"
+        >
+          <div className="absolute inset-0 pointer-events-none opacity-40 gold-gradient mix-blend-soft-light" />
           <div className="relative z-10">
-            <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">Ready to Build Your Wealth?</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-8">
-              Contact {siteConfig.name} today. Call <a href={`tel:${siteConfig.phone}`} className="text-gold font-semibold">{siteConfig.phone}</a> or book a consultation.
+            <p className="text-[11px] uppercase tracking-[0.22em] text-gold font-semibold mb-4">Next step</p>
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl mb-5">Ready to build lasting wealth?</h2>
+            <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
+              Speak with {siteConfig.shortName} today. Call{" "}
+              <a href={`tel:${siteConfig.phone}`} className="text-gold font-semibold hover:text-gold-light transition-colors">
+                {siteConfig.phone}
+              </a>{" "}
+              or book a private consultation.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link to="/contact"><Button size="lg">Contact Us</Button></Link>
               <Link to="/properties"><Button variant="outline" size="lg">Browse Properties</Button></Link>
             </div>

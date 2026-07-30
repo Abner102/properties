@@ -2,7 +2,6 @@
 
 import { whyChooseUs } from "@/data/site";
 import SectionHeading from "@/components/ui/SectionHeading";
-import GlassCard from "@/components/ui/GlassCard";
 import FadeIn from "@/components/ui/FadeIn";
 import { Building2, Code2, Handshake, Scale, TrendingUp, Headphones } from "lucide-react";
 
@@ -12,19 +11,28 @@ export default function WhyChooseUs() {
   return (
     <section className="section-padding">
       <div className="max-w-7xl mx-auto">
-        <SectionHeading subtitle="Why Us" title="Why Choose Endless Infinity" description="Trust, innovation, and excellence in every engagement." />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <SectionHeading
+          subtitle="Why Us"
+          title="Clarity, craft, and compounding value"
+          description="One partner for property, technology, and long-term growth."
+        />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-12">
           {whyChooseUs.map((item, i) => {
             const Icon = icons[i] || Building2;
             return (
-              <FadeIn key={item.title} delay={i * 0.1}>
-                <GlassCard className="h-full">
-                  <div className="w-12 h-12 rounded-xl gold-gradient flex items-center justify-center mb-4">
-                    <Icon size={22} className="text-background" />
+              <FadeIn key={item.title} delay={i * 0.07}>
+                <div className="group">
+                  <div className="mb-5 flex items-center gap-3">
+                    <span className="flex h-10 w-10 items-center justify-center border border-gold/40 text-gold">
+                      <Icon size={18} />
+                    </span>
+                    <span className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground">
+                      0{i + 1}
+                    </span>
                   </div>
-                  <h3 className="font-display text-lg font-bold mb-2">{item.title}</h3>
+                  <h3 className="font-display text-2xl mb-3 group-hover:text-gold transition-colors">{item.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
-                </GlassCard>
+                </div>
               </FadeIn>
             );
           })}

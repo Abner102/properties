@@ -24,8 +24,8 @@ export const cars: Car[] = [
     transmission: "automatic",
     luxury: true,
     images: [
-      "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1563720360172-67b8f087c9b8?w=1200&h=800&fit=crop",
+      "/images/car-mercedes.jpg",
+      "/images/car-bmw.jpg",
     ],
     description: "The pinnacle of luxury motoring. Brand new Mercedes-Benz S-Class with full options.",
     specs: [
@@ -46,7 +46,7 @@ export const cars: Car[] = [
     transmission: "automatic",
     luxury: true,
     images: [
-      "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+      "/images/car-range.jpg",
     ],
     description: "Powerful and elegant SUV perfect for Nigerian roads with premium leather interior.",
     specs: [
@@ -67,7 +67,7 @@ export const cars: Car[] = [
     transmission: "automatic",
     luxury: true,
     images: [
-      "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=1200&h=800&fit=crop",
+      "/images/car-tesla.jpg",
     ],
     description: "The fastest production sedan. Zero emissions, maximum performance.",
     specs: [
@@ -88,7 +88,7 @@ export const cars: Car[] = [
     transmission: "automatic",
     luxury: false,
     images: [
-      "https://images.unsplash.com/photo-1621007947382-b6763a8ec6cc?w=1200&h=800&fit=crop",
+      "/images/car-camry.jpg",
     ],
     description: "Reliable and fuel-efficient sedan. Perfect for daily commuting in Lagos.",
     specs: [
@@ -109,7 +109,7 @@ export const cars: Car[] = [
     transmission: "automatic",
     luxury: true,
     images: [
-      "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=1200&h=800&fit=crop",
+      "/images/car-bmw.jpg",
     ],
     description: "Spacious luxury SUV with third-row seating and cutting-edge technology.",
     specs: [
@@ -130,7 +130,7 @@ export const cars: Car[] = [
     transmission: "automatic",
     luxury: false,
     images: [
-      "https://images.unsplash.com/photo-1609521263047-e8c566f5d232?w=1200&h=800&fit=crop",
+      "/images/car-accord.jpg",
     ],
     description: "Affordable and dependable. Great value for money with low maintenance costs.",
     specs: [
