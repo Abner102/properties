@@ -16,7 +16,7 @@ export default function CTASection() {
               Contact {siteConfig.name} today. Call <a href={`tel:${siteConfig.phone}`} className="text-gold font-semibold">{siteConfig.phone}</a> or book a consultation.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/contact"><Button size="lg">Book Consultation</Button></Link>
+              <Link to="/contact"><Button size="lg">Contact Us</Button></Link>
               <Link to="/properties"><Button variant="outline" size="lg">Browse Properties</Button></Link>
             </div>
           </div>

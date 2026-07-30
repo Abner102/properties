@@ -1,11 +1,10 @@
 import fs from "fs";
 import path from "path";
 import multer from "multer";
-
-const UPLOAD_ROOT = path.join(process.cwd(), "public", "uploads");
+import { uploadsRoot } from "./paths";
 
 export function ensureUploadDir(folder: string) {
-  const dir = path.join(UPLOAD_ROOT, folder);
+  const dir = path.join(uploadsRoot, folder);
   fs.mkdirSync(dir, { recursive: true });
   return dir;
 }

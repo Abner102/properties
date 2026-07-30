@@ -372,8 +372,23 @@ router.post("/projects", async (req, res) => {
 router.put("/projects/:id", async (req, res) => {
   const auth = await requireAuth(req, "projects");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  const item = await prisma.softwareProject.update({ where: { id: req.params.id }, data: req.body });
-  return res.json(withMongoId(item));
+
+  try {
+    const body = { ...req.body } as Record<string, unknown>;
+    delete body._id;
+    delete body.id;
+    delete body.createdAt;
+    delete body.updatedAt;
+
+    const item = await prisma.softwareProject.update({
+      where: { id: req.params.id },
+      data: body,
+    });
+    return res.json(withMongoId(item));
+  } catch (err) {
+    console.error("PUT /admin/projects/:id failed:", err);
+    return res.status(500).json({ error: "Failed to update project" });
+  }
 });
 
 router.delete("/projects/:id", async (req, res) => {

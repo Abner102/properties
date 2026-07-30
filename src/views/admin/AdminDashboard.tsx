@@ -4,6 +4,7 @@ import AdminSidebar, { AdminHeader, type AdminSection } from "@/components/admin
 import DashboardOverview from "@/components/admin/DashboardOverview";
 import ProductManager from "@/components/admin/ProductManager";
 import GenericManager from "@/components/admin/GenericManager";
+import SoftwareProjectManager from "@/components/admin/SoftwareProjectManager";
 import InquiryManager from "@/components/admin/InquiryManager";
 import TeamManager from "@/components/admin/TeamManager";
 import SettingsManager from "@/components/admin/SettingsManager";
@@ -96,27 +97,8 @@ export default function AdminDashboard() {
           />
         );
       case "projects":
-        return (
-          <GenericManager
-            title="Software Projects"
-            apiEndpoint="/api/admin/projects"
-            columns={[
-              { key: "name", label: "Name" },
-              { key: "status", label: "Status" },
-              { key: "client", label: "Client" },
-            ]}
-            formFields={[
-              { key: "name", label: "Project Name" },
-              { key: "slug", label: "Slug" },
-              { key: "description", label: "Description", type: "textarea" },
-              { key: "client", label: "Client" },
-              { key: "status", label: "Status" },
-              { key: "technologies", label: "Technologies (comma-separated)" },
-              { key: "url", label: "Project URL" },
-            ]}
-            emptyItem={{ name: "", slug: "", description: "", client: "", status: "active", published: true }}
-          />
-        );
+      case "portfolio":
+        return <SoftwareProjectManager />;
       case "newsletter":
         return (
           <GenericManager

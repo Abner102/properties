@@ -13,7 +13,7 @@ export type Role = (typeof ROLES)[number];
 
 export const PERMISSIONS: Record<Role, string[]> = {
   super_admin: ["*"],
-  admin: ["dashboard", "products", "categories", "blog", "team", "inquiries", "users", "media", "analytics", "settings"],
+  admin: ["dashboard", "products", "categories", "blog", "team", "projects", "portfolio", "inquiries", "users", "media", "analytics", "settings"],
   property_manager: ["dashboard", "products", "categories", "inquiries", "media"],
   vehicle_manager: ["dashboard", "products", "inquiries", "media"],
   content_manager: ["dashboard", "blog", "media", "testimonials", "newsletter"],

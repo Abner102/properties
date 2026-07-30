@@ -9,6 +9,8 @@ import blogRoutes from "./blog";
 import catalogRoutes from "./catalog";
 import adminRoutes from "./admin";
 import publicTeamRoutes from "./public-team";
+import publicProjectsRoutes from "./public-projects";
+import mediaRoutes from "./media";
 import uploadRoutes from "./upload";
 
 const router = Router();
@@ -18,6 +20,8 @@ router.use("/inquiries", inquiriesRoutes);
 router.use("/newsletter", newsletterRoutes);
 router.use("/public/products", publicProductsRoutes);
 router.use("/public/team", publicTeamRoutes);
+router.use("/public/projects", publicProjectsRoutes);
+router.use("/media", mediaRoutes);
 router.use("/upload", uploadRoutes);
 router.use("/admin/upload", uploadRoutes);
 router.use("/products", productsRoutes);
