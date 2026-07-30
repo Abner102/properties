@@ -1,0 +1,284 @@
+// Endless Infinity Properties — Supabase (PostgreSQL) via Prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  password     String
+  name         String
+  role         String    @default("admin")
+  suspended    Boolean   @default(false)
+  lastLogin    DateTime?
+  refreshToken String?
+  permissions  Json      @default("[]")
+  phone        String?
+  avatar       String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Product {
+  id               String    @id @default(cuid())
+  name             String
+  productCode      String?   @unique
+  slug             String    @unique
+  shortDescription String?
+  description      String    @default("")
+  price            Float     @default(0)
+  discountPrice    Float?
+  stock            Int       @default(1)
+  category         String
+  subcategory      String?
+  brand            String?
+  propertyType     String?
+  listingType      String    @default("sale")
+  bedrooms         Int       @default(0)
+  bathrooms        Int       @default(0)
+  toilets          Int       @default(0)
+  parkingSpaces    Int       @default(0)
+  landSize         Float?
+  squareMeter      Float?
+  yearBuilt        Int?
+  address          String?
+  state            String?
+  city             String?
+  area             String?
+  lat              Float?
+  lng              Float?
+  amenities        Json      @default("[]")
+  specifications   Json?
+  model            String?
+  year             Int?
+  fuel             String?
+  transmission     String?
+  mileage          Int?
+  color            String?
+  engine           String?
+  vin              String?
+  technologies     Json      @default("[]")
+  githubUrl        String?
+  liveUrl          String?
+  client           String?
+  completionDate   DateTime?
+  coverImage       String?
+  images           Json      @default("[]")
+  videos           Json      @default("[]")
+  pdfs             Json      @default("[]")
+  floorPlans       Json      @default("[]")
+  featured         Boolean   @default(false)
+  trending         Boolean   @default(false)
+  popular          Boolean   @default(false)
+  recommended      Boolean   @default(false)
+  status           String    @default("draft")
+  views            Int       @default(0)
+  tags             Json      @default("[]")
+  metaTitle        String?
+  metaDescription  String?
+  keywords         Json      @default("[]")
+  investmentScore  Float?
+  nearbySchools    Json      @default("[]")
+  nearbyHospitals  Json      @default("[]")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([category, status])
+}
+
+model Blog {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  excerpt         String?
+  content         String    @default("")
+  category        String?
+  tags            Json      @default("[]")
+  image           String?
+  author          String?
+  readTime        Int       @default(5)
+  published       Boolean   @default(false)
+  scheduledAt     DateTime?
+  featured        Boolean   @default(false)
+  metaTitle       String?
+  metaDescription String?
+  views           Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Team {
+  id              String   @id @default(cuid())
+  name            String
+  position        String?
+  bio             String?
+  image           String?
+  email           String?
+  phone           String?
+  skills          Json     @default("[]")
+  experience      String?
+  yearsExperience Int?
+  github          String?
+  linkedin        String?
+  instagram       String?
+  isFounder       Boolean  @default(false)
+  order           Int      @default(0)
+  published       Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  parentId    String?
+  icon        String?
+  image       String?
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Settings {
+  id                String   @id @default(cuid())
+  key               String   @unique @default("default")
+  companyName       String   @default("Endless Infinity Properties")
+  tagline           String?
+  phone             String   @default("07065109007")
+  whatsapp          String   @default("07065109007")
+  email             String?
+  address           String?
+  logo              String?
+  favicon           String?
+  socialInstagram   String?
+  socialLinkedin    String?
+  socialTwitter     String?
+  socialYoutube     String?
+  socialFacebook    String?
+  heroVideo         String?
+  heroImage         String?
+  seoTitle          String?
+  seoDescription    String?
+  googleAnalytics   String?
+  facebookPixel     String?
+  smtpHost          String?
+  smtpPort          Int?
+  cloudinaryCloudName String?
+  mapLat            Float?
+  mapLng            Float?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model SoftwareProject {
+  id             String    @id @default(cuid())
+  name           String
+  slug           String    @unique
+  category       String?
+  description    String?
+  overview       String?
+  features       Json      @default("[]")
+  outcomes       Json      @default("[]")
+  technologies   Json      @default("[]")
+  industry       String?
+  client         String?
+  githubUrl      String?
+  liveUrl        String?
+  images         Json      @default("[]")
+  screenshots    Json      @default("[]")
+  completionDate DateTime?
+  status         String    @default("completed")
+  published      Boolean   @default(true)
+  featured       Boolean   @default(false)
+  awards         Json      @default("[]")
+  certificates   Json      @default("[]")
+  videos         Json      @default("[]")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Inquiry {
+  id         String    @id @default(cuid())
+  type       String
+  name       String
+  email      String
+  phone      String?
+  message    String
+  subject    String?
+  productId  String?
+  status     String    @default("new")
+  assignedTo String?
+  reply      String?
+  repliedAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  content   String
+  image     String?
+  rating    Int      @default(5)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Newsletter {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String
+  title     String
+  message   String?
+  read      Boolean  @default(false)
+  link      String?
+  userId    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String?
+  entityId  String?
+  details   Json?
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+}
+
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  email     String
+  ip        String?
+  success   Boolean  @default(false)
+  userAgent String?
+  createdAt DateTime @default(now())
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  filename  String
+  url       String
+  type      String
+  folder    String   @default("general")
+  size      Int?
+  createdAt DateTime @default(now())
+}
