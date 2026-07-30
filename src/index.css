@@ -181,39 +181,112 @@ html:not(.dark) .glass-strong {
   background-size: 100% 1px;
 }
 
-.page-loader-mark {
+.page-loader-scene {
   position: relative;
-  width: 56px;
-  height: 56px;
+  display: grid;
+  place-items: center;
+  --orbit-r: 68px;
 }
 
-.page-loader-mark--sm {
-  width: 36px;
-  height: 36px;
+.page-loader-scene--sm {
+  --orbit-r: 48px;
 }
 
-.page-loader-ring {
+.page-loader-scene--sm .page-loader-car {
+  width: 64px;
+  height: 64px;
+}
+
+.page-loader-scene--sm .page-loader-road {
+  width: 110%;
+  bottom: 6%;
+}
+
+.page-loader-orbit {
   position: absolute;
   inset: 0;
-  border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent);
-  border-top-color: var(--gold);
-  border-radius: 50%;
-  animation: page-loader-spin 0.9s linear infinite;
+  animation: page-loader-spin 18s linear infinite;
 }
 
-.page-loader-core {
+.page-loader-code {
   position: absolute;
-  inset: 28%;
-  background: var(--gold);
-  border-radius: 50%;
-  animation: page-loader-pulse 1.2s ease-in-out infinite;
+  left: 50%;
+  top: 50%;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--gold);
+  opacity: 0.8;
+  white-space: nowrap;
+  transform:
+    translate(-50%, -50%)
+    rotate(calc(360deg / var(--n) * var(--i)))
+    translateY(calc(var(--orbit-r) * -1))
+    rotate(calc(-360deg / var(--n) * var(--i)));
+}
+
+.page-loader-scene--sm .page-loader-code {
+  font-size: 8px;
+}
+
+.page-loader-car {
+  position: relative;
+  z-index: 2;
+  width: 92px;
+  height: 92px;
+  animation: page-loader-bob 2.8s ease-in-out infinite;
+}
+
+.page-loader-stroke {
+  stroke: var(--gold);
+  fill: none;
+}
+
+.page-loader-fill {
+  fill: var(--gold);
+}
+
+.page-loader-wheel {
+  stroke: var(--gold);
+  fill: var(--background);
+}
+
+.page-loader-road {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 8%;
+  width: 120%;
+  height: 18px;
+  transform: translateX(-50%);
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+  border-top: 1px dashed color-mix(in srgb, var(--gold) 45%, transparent);
+}
+
+.page-loader-road-track {
+  display: flex;
+  gap: 0.85rem;
+  width: max-content;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--gold) 70%, var(--muted-foreground));
+  animation: page-loader-road 12s linear infinite;
 }
 
 @keyframes page-loader-spin {
   to { transform: rotate(360deg); }
 }
 
-@keyframes page-loader-pulse {
-  0%, 100% { transform: scale(0.75); opacity: 0.55; }
-  50% { transform: scale(1); opacity: 1; }
+@keyframes page-loader-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes page-loader-road {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }

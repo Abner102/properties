@@ -3,6 +3,7 @@ import { useParams, Navigate } from "react-router-dom";
 import { getProductBySlug, toCar } from "@/lib/products-client";
 import type { Car } from "@/data/cars";
 import CarDetailContent from "@/views/cars/CarDetailContent";
+import PageLoader from "@/components/ui/PageLoader";
 
 export default function CarDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -14,7 +15,7 @@ export default function CarDetailPage() {
   }, [id]);
 
   if (car === undefined) {
-    return <div className="pt-32 text-center text-muted-foreground">Loading...</div>;
+    return <PageLoader label="Loading vehicle" />;
   }
   if (!car) return <Navigate to="/404" replace />;
 

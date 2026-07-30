@@ -10,6 +10,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import GlassCard from "@/components/ui/GlassCard";
 import FadeIn from "@/components/ui/FadeIn";
 import Button from "@/components/ui/Button";
+import PageLoader from "@/components/ui/PageLoader";
 
 interface PublicTeamMember {
   _id: string;
@@ -105,7 +106,7 @@ export default function TeamContent() {
       </section>
 
       {loading ? (
-        <p className="text-center text-muted-foreground py-16 px-4">Loading team...</p>
+        <PageLoader variant="inline" label="Loading team" />
       ) : (
         <>
           {founders.length > 0 && (

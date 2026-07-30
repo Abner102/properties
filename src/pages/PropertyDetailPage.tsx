@@ -3,6 +3,7 @@ import { useParams, Navigate } from "react-router-dom";
 import { getProductBySlug, toProperty } from "@/lib/products-client";
 import type { Property } from "@/data/properties";
 import PropertyDetailContent from "@/views/properties/PropertyDetailContent";
+import PageLoader from "@/components/ui/PageLoader";
 
 export default function PropertyDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -14,7 +15,7 @@ export default function PropertyDetailPage() {
   }, [id]);
 
   if (property === undefined) {
-    return <div className="pt-32 text-center text-muted-foreground">Loading...</div>;
+    return <PageLoader label="Loading property" />;
   }
   if (!property) return <Navigate to="/404" replace />;
 

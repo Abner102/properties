@@ -5,34 +5,42 @@ import { useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import PageLoader from "@/components/ui/PageLoader";
 
-const MIN_VISIBLE_MS = 420;
+const BOOT_MS = 2400;
+const ROUTE_LOADER_MS = 1400;
 
 export default function RouteProgress() {
   const location = useLocation();
   const [progress, setProgress] = useState(0);
   const [barVisible, setBarVisible] = useState(false);
   const [boot, setBoot] = useState(true);
+  const [routeLoading, setRouteLoading] = useState(false);
+  const [booted, setBooted] = useState(false);
 
   useEffect(() => {
-    const done = window.setTimeout(() => setBoot(false), 950);
+    const done = window.setTimeout(() => {
+      setBoot(false);
+      setBooted(true);
+    }, BOOT_MS);
     return () => window.clearTimeout(done);
   }, []);
 
   useEffect(() => {
-    if (boot) return;
+    if (!booted) return;
 
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
 
+    setRouteLoading(true);
     setBarVisible(true);
-    setProgress(18);
+    setProgress(12);
 
-    const t1 = window.setTimeout(() => setProgress(62), 90);
-    const t2 = window.setTimeout(() => setProgress(88), 220);
-    const t3 = window.setTimeout(() => setProgress(100), MIN_VISIBLE_MS);
+    const t1 = window.setTimeout(() => setProgress(40), 280);
+    const t2 = window.setTimeout(() => setProgress(70), 650);
+    const t3 = window.setTimeout(() => setProgress(100), ROUTE_LOADER_MS);
     const t4 = window.setTimeout(() => {
+      setRouteLoading(false);
       setBarVisible(false);
       setProgress(0);
-    }, MIN_VISIBLE_MS + 240);
+    }, ROUTE_LOADER_MS + 280);
 
     return () => {
       window.clearTimeout(t1);
@@ -40,7 +48,7 @@ export default function RouteProgress() {
       window.clearTimeout(t3);
       window.clearTimeout(t4);
     };
-  }, [location.pathname, location.search, boot]);
+  }, [location.pathname, location.search, booted]);
 
   return (
     <>
@@ -51,9 +59,24 @@ export default function RouteProgress() {
             className="fixed inset-0 z-[100]"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
             <PageLoader variant="fullscreen" label="Welcome" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {routeLoading && (
+          <motion.div
+            key={`route-${location.pathname}`}
+            className="fixed inset-0 z-[90] bg-background/90 backdrop-blur-[2px]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            <PageLoader variant="fullscreen" label="Loading page" />
           </motion.div>
         )}
       </AnimatePresence>
@@ -68,7 +91,7 @@ export default function RouteProgress() {
           aria-label="Page loading"
         >
           <div
-            className="h-full gold-gradient shadow-[0_0_12px_rgba(198,167,94,0.55)] transition-[width] duration-300 ease-out"
+            className="h-full gold-gradient shadow-[0_0_12px_rgba(198,167,94,0.55)] transition-[width] duration-500 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>

@@ -5,6 +5,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import GlassCard from "@/components/ui/GlassCard";
 import FadeIn from "@/components/ui/FadeIn";
 import Button from "@/components/ui/Button";
+import PageLoader from "@/components/ui/PageLoader";
 import { usePortfolioProjects } from "@/hooks/usePortfolioProjects";
 
 export default function PortfolioContent() {
@@ -25,7 +26,7 @@ export default function PortfolioContent() {
 
       <section className="max-w-7xl mx-auto px-6 pb-16">
         {loading && !projects.length ? (
-          <p className="text-center text-muted-foreground py-16">Loading projects...</p>
+          <PageLoader variant="inline" label="Loading projects" />
         ) : !projects.length ? (
           <p className="text-center text-muted-foreground py-16">No portfolio projects yet.</p>
         ) : (

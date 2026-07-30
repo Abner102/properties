@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import FadeIn from "@/components/ui/FadeIn";
+import PageLoader from "@/components/ui/PageLoader";
 import { usePortfolioProjects } from "@/hooks/usePortfolioProjects";
 
 export default function FeaturedProjects() {
@@ -28,7 +29,7 @@ export default function FeaturedProjects() {
         </div>
 
         {loading && !featured.length ? (
-          <p className="text-muted-foreground py-12">Loading projects...</p>
+          <PageLoader variant="inline" label="Loading projects" />
         ) : (
           <div className="grid md:grid-cols-3 gap-8 md:gap-10">
             {featured.map((project, i) => (
