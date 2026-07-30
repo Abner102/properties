@@ -13,7 +13,10 @@
 # testing
 /coverage
 
-# next.js
+# vite
+/dist/
+
+# legacy next.js cache (if any)
 /.next/
 /out/
 

@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Endless Infinity Properties
 
-## Getting Started
+**Building Wealth Through Technology, Real Estate & Premium Investments.**
 
-First, run the development server:
+A premium, enterprise-grade corporate website and admin dashboard for Endless Infinity Properties — a Nigerian technology-driven real estate company.
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS 4, Framer Motion |
+| Backend | Next.js API Routes (Node.js) |
+| Database | SQLite (dev) / PostgreSQL (production) via Prisma ORM |
+| Auth | JWT + bcrypt password hashing |
+| Themes | Dark & Light mode (next-themes) |
+| Storage | Cloudinary-ready (configure in `.env`) |
+
+## Quick Start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run db:setup    # Create database & seed admin user
+npm run dev         # Start at http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Admin Access
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **URL:** http://localhost:3000/admin/login
+- **Email:** `admin@endlessinfinity.ng`
+- **Password:** Set via `ADMIN_PASSWORD` in `.env` (default: `Admin@12345`)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> Change the admin password immediately in production.
 
-## Learn More
+## Pages
 
-To learn more about Next.js, take a look at the following resources:
+| Page | Route |
+|------|-------|
+| Home | `/` |
+| About | `/about` |
+| Properties | `/properties` |
+| Land Sales | `/land` |
+| Cars | `/cars` |
+| Software Services | `/software` |
+| Portfolio | `/portfolio` |
+| Portfolio Case Study | `/portfolio/[slug]` |
+| Blog | `/blog` |
+| Careers | `/careers` |
+| Content Creation | `/content-creation` |
+| Contact | `/contact` |
+| Admin Dashboard | `/admin` |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Featured Portfolio Projects
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [Nexora SMS](https://nexorasms.com) — `/portfolio/nexora-sms`
+- [JosCity](https://joscity.com) — `/portfolio/joscity`
+- [Afresh Center](https://afreshcenter.org) — `/portfolio/afresh-center`
+- [JobFinix](https://jobfinix.com) — `/portfolio/jobfinix`
+- [Gatewav](https://gatewav.com) — `/portfolio/gatewav`
 
-## Deploy on Vercel
+## API Endpoints
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Endpoint | Methods | Description |
+|----------|---------|-------------|
+| `/api/auth/login` | POST | Admin authentication |
+| `/api/auth/logout` | POST | Clear session |
+| `/api/inquiries` | GET, POST | Contact form submissions |
+| `/api/newsletter` | POST | Newsletter subscriptions |
+| `/api/properties` | GET, POST | Property management |
+| `/api/lands` | GET, POST | Land management |
+| `/api/cars` | GET, POST | Car management |
+| `/api/projects` | GET, POST | Portfolio projects |
+| `/api/blog` | GET, POST | Blog posts |
+| `/api/admin/stats` | GET | Dashboard analytics |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Environment Variables
+
+Copy `.env.example` to `.env` and configure:
+
+```env
+DATABASE_URL="file:./dev.db"          # SQLite for dev
+# DATABASE_URL="postgresql://..."     # PostgreSQL for production
+JWT_SECRET="your-secure-secret"
+ADMIN_EMAIL="admin@endlessinfinity.ng"
+ADMIN_PASSWORD="your-secure-password"
+CLOUDINARY_CLOUD_NAME=""
+CLOUDINARY_API_KEY=""
+CLOUDINARY_API_SECRET=""
+NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+```
+
+## Production Deployment
+
+### Vercel (Frontend + API)
+```bash
+npm run build
+```
+
+Set `DATABASE_URL` to your PostgreSQL connection string. Run:
+```bash
+npx prisma migrate deploy
+npx tsx prisma/seed.ts
+```
+
+### Switch to PostgreSQL
+1. Change `provider` in `prisma/schema.prisma` to `"postgresql"`
+2. Set `DATABASE_URL` to your PostgreSQL connection string
+3. Run `npx prisma db push`
+
+## Contact
+
+- **Phone:** 07065109007
+- **WhatsApp:** 07065109007
+- **Email:** hello@endlessinfinity.ng
+
+## Customization
+
+- **Content:** Edit files in `src/data/` or use the admin dashboard
+- **Images:** Replace Unsplash URLs with your assets in `/public/images/`
+- **Branding:** Update `src/data/site.ts` and `prisma/seed.ts`
