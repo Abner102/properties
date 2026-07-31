@@ -35,7 +35,7 @@ export default function Navbar() {
               overHero ? "text-white" : "text-foreground"
             )}
           >
-            Endless <span className="text-gold">Infinity</span>
+            E <span className="text-gold">I</span>
           </span>
         </Link>
 
