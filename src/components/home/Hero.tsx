@@ -59,7 +59,7 @@ export default function Hero() {
               size="lg"
               className="border-white/35 text-white hover:border-gold hover:bg-gold hover:text-background"
             >
-              Book a Consultation
+             Get In Touch
             </Button>
           </Link>
         </motion.div>
