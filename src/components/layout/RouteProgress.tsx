@@ -61,7 +61,7 @@ export default function RouteProgress() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            <PageLoader variant="fullscreen" label="Welcome" />
+            <PageLoader variant="fullscreen" />
           </motion.div>
         )}
       </AnimatePresence>
@@ -76,7 +76,7 @@ export default function RouteProgress() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
           >
-            <PageLoader variant="fullscreen" label="Loading page" />
+            <PageLoader variant="fullscreen" />
           </motion.div>
         )}
       </AnimatePresence>
