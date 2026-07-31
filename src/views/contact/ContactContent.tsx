@@ -74,8 +74,12 @@ export default function ContactContent() {
                 <option value="consultation">Consultation</option>
               </select>
               <textarea placeholder="Message" rows={5} required value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:outline-none focus:border-gold/50 resize-none" />
-              <Button type="submit" className="w-full" size="lg" disabled={status === "loading"}>
-                {status === "loading" ? "Sending..." : "Book Appointment"}
+              <Button type="submit" className="w-full" size="lg" disabled={status === "loading"} aria-label="Send message">
+                {status === "loading" ? (
+                  "Sending..."
+                ) : (
+                  <Mail size={22} strokeWidth={2} />
+                )}
               </Button>
               {status === "success" && <p className="text-gold text-sm text-center">Message sent! We&apos;ll respond within 24 hours.</p>}
               {status === "error" && <p className="text-red-400 text-sm text-center">Failed to send. Please try again or call us.</p>}
