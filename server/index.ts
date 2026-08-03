@@ -4,11 +4,15 @@ import cookieParser from "cookie-parser";
 import fs from "fs";
 import path from "path";
 import { config as loadEnv } from "dotenv";
-import apiRoutes from "./routes";
 import { uploadsRoot } from "./lib/paths";
-import { ensureDb, validateDatabaseUrl } from "./lib/db";
 
 loadEnv();
+
+const [{ default: apiRoutes }, { ensureDb, validateDatabaseUrl }] = await Promise.all([
+  import("./routes"),
+  import("./lib/db"),
+]);
+
 validateDatabaseUrl();
 
 const app = express();
