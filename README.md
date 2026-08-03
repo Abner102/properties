@@ -77,8 +77,7 @@ npm run dev         # Start at http://localhost:3000
 Copy `.env.example` to `.env` and configure:
 
 ```env
-DATABASE_URL="file:./dev.db"          # SQLite for dev
-# DATABASE_URL="postgresql://..."     # PostgreSQL for production
+DATABASE_URL="postgresql://..."          # Supabase PostgreSQL connection string
 JWT_SECRET="your-secure-secret"
 ADMIN_EMAIL="admin@endlessinfinity.ng"
 ADMIN_PASSWORD="your-secure-password"
@@ -95,16 +94,7 @@ NEXT_PUBLIC_SITE_URL="http://localhost:3000"
 npm run build
 ```
 
-Set `DATABASE_URL` to your PostgreSQL connection string. Run:
-```bash
-npx prisma migrate deploy
-npx tsx prisma/seed.ts
-```
-
-### Switch to PostgreSQL
-1. Change `provider` in `prisma/schema.prisma` to `"postgresql"`
-2. Set `DATABASE_URL` to your PostgreSQL connection string
-3. Run `npx prisma db push`
+Set `DATABASE_URL` to your Supabase PostgreSQL connection string.
 
 ## Contact
 

@@ -1,7 +1,6 @@
 import prisma from "./prisma";
 import { properties as staticProperties, type Property } from "../../src/data/properties";
 import { cars as staticCars, type Car } from "../../src/data/cars";
-import type { Product } from "@prisma/client";
 
 export interface PublicProduct {
   id: string;
@@ -45,7 +44,7 @@ function jsonNearby(value: unknown): { name: string; type: string; distance: str
   return Array.isArray(value) ? (value as { name: string; type: string; distance: string }[]) : [];
 }
 
-function mapDbProduct(p: Product): PublicProduct {
+function mapDbProduct(p: any): PublicProduct {
   const images = jsonArray(p.images);
   const cover = p.coverImage || images[0] || "";
   const allImages = cover ? [cover, ...images.filter((i) => i !== cover)] : images;

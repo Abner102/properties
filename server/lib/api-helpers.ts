@@ -1,5 +1,4 @@
 import type { Request } from "express";
-import type { Prisma } from "@prisma/client";
 import {
   getAuthUserFromRequest,
   isEnvAdminAuth,
@@ -7,7 +6,7 @@ import {
   ACCESS_TOKEN_NAME,
 } from "./auth";
 import { hasPermission, type Role } from "./constants";
-import prisma, { withDb } from "./prisma";
+import prisma from "./prisma";
 import { omitPassword, withMongoId } from "./serialize";
 
 export async function requireAuth(req: Request, permission?: string) {
@@ -33,7 +32,7 @@ export async function requireAuth(req: Request, permission?: string) {
   }
 
   try {
-    const user = await withDb((db) => db.user.findUnique({ where: { id: auth.userId } }));
+    const user = await prisma.user.findUnique({ where: { id: auth.userId } });
     if (!user || user.suspended) return { error: "Unauthorized", status: 401 as const, user: null };
 
     if (permission && !hasPermission(user.role as Role, permission)) {
@@ -61,7 +60,7 @@ export async function logActivity(
         action,
         entity,
         entityId,
-        details: details ? (details as Prisma.InputJsonValue) : undefined,
+        details: details ? details : undefined,
         ip: (req?.headers["x-forwarded-for"] as string) || (req?.headers["x-real-ip"] as string),
         userAgent: req?.headers["user-agent"],
       },

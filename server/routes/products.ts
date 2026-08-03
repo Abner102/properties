@@ -3,7 +3,7 @@ import prisma from "../lib/prisma";
 import { requireAuth, slugify, logActivity } from "../lib/api-helpers";
 import { generateProductCode } from "../lib/constants";
 import { withMongoId, withMongoIds } from "../lib/serialize";
-import type { Prisma } from "@prisma/client";
+
 
 const router = Router();
 
@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
     const page = parseInt((req.query.page as string) || "1");
     const limit = parseInt((req.query.limit as string) || "20");
 
-    const where: Prisma.ProductWhereInput = {};
+    const where: Record<string, any> = {};
     if (category) where.category = category;
     if (status) where.status = status;
     if (featured === "true") where.featured = true;
@@ -29,7 +29,7 @@ router.get("/", async (req, res) => {
       ];
     }
 
-    const orderBy: Prisma.ProductOrderByWithRelationInput =
+    const orderBy: any =
       sort === "oldest"
         ? { createdAt: "asc" }
         : sort === "price_asc"
@@ -126,7 +126,7 @@ router.patch("/:id", async (req, res) => {
   try {
     const { action } = req.body;
 
-    const updates: Prisma.ProductUpdateInput = {};
+    const updates: Record<string, any> = {};
     switch (action) {
       case "publish":
         updates.status = "published";

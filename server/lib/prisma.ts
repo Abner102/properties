@@ -1,84 +1,242 @@
-import { PrismaClient } from "@prisma/client";
+import { Pool } from "pg";
 
-const globalForPrisma = globalThis as unknown as {
-  prisma?: PrismaClient;
-};
-
-function createClient() {
-  return new PrismaClient({
-    log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
-  });
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  throw new Error("DATABASE_URL must be set for Supabase PostgreSQL access.");
 }
 
-export function getPrisma() {
-  if (!globalForPrisma.prisma) {
-    globalForPrisma.prisma = createClient();
+const pool = new Pool({
+  connectionString,
+  ssl:
+    /^postgres(?:ql)?:\/\//.test(connectionString) &&
+    (process.env.NODE_ENV === "production" || connectionString.includes("sslmode=require"))
+      ? { rejectUnauthorized: false }
+      : undefined,
+});
+
+function quoteIdentifier(identifier: string) {
+  return `"${identifier.replace(/"/g, "\"")}"`;
+}
+
+function pascalCase(name: string) {
+  return name.replace(/(^.|[A-Z])/g, (match, index) =>
+    index === 0 ? match.toUpperCase() : match.toUpperCase()
+  );
+}
+
+function buildSelect(select: Record<string, boolean> | string[] | undefined) {
+  if (!select) return "*";
+  if (Array.isArray(select)) {
+    return select.map(quoteIdentifier).join(", ");
   }
-  return globalForPrisma.prisma;
+  return Object.entries(select)
+    .filter(([, value]) => value)
+    .map(([key]) => quoteIdentifier(key))
+    .join(", ") || "*";
 }
 
-/** @deprecated use getPrisma() — kept for existing imports */
-export const prisma = getPrisma();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
+function buildOrderBy(orderBy: any) {
+  if (!orderBy) return "";
+  const entries = Array.isArray(orderBy) ? orderBy : [orderBy];
+  const clauses = entries
+    .map((entry) => {
+      const [field, direction] = Object.entries(entry)[0] as [string, string];
+      return `${quoteIdentifier(field)} ${direction.toUpperCase()}`;
+    })
+    .join(", ");
+  return clauses ? `ORDER BY ${clauses}` : "";
 }
 
-async function resetClient() {
-  try {
-    await globalForPrisma.prisma?.$disconnect();
-  } catch {
-    /* ignore */
+function buildWhere(where: any, values: any[]): string {
+  if (!where || typeof where !== "object" || Array.isArray(where)) return "";
+  const clauses: string[] = [];
+
+  for (const [key, value] of Object.entries(where)) {
+    if (key === "OR" && Array.isArray(value)) {
+      const subClauses = value.map((clause) => {
+        const sql = buildWhere(clause, values);
+        return sql ? `(${sql})` : "";
+      });
+      clauses.push(subClauses.filter(Boolean).join(" OR "));
+      continue;
+    }
+
+    const column = quoteIdentifier(key);
+
+    if (value === null) {
+      clauses.push(`${column} IS NULL`);
+      continue;
+    }
+
+    if (typeof value === "object" && !Array.isArray(value)) {
+      if ("contains" in value) {
+        values.push(`%${String(value.contains)}%`);
+        clauses.push(`LOWER(${column}::text) LIKE LOWER($${values.length})`);
+        continue;
+      }
+      if ("in" in value && Array.isArray(value.in)) {
+        values.push(value.in);
+        clauses.push(`${column} = ANY($${values.length})`);
+        continue;
+      }
+      if ("gt" in value) {
+        values.push(value.gt);
+        clauses.push(`${column} > $${values.length}`);
+        continue;
+      }
+      if ("gte" in value) {
+        values.push(value.gte);
+        clauses.push(`${column} >= $${values.length}`);
+        continue;
+      }
+      if ("lt" in value) {
+        values.push(value.lt);
+        clauses.push(`${column} < $${values.length}`);
+        continue;
+      }
+      if ("lte" in value) {
+        values.push(value.lte);
+        clauses.push(`${column} <= $${values.length}`);
+        continue;
+      }
+      if ("equals" in value) {
+        values.push(value.equals);
+        clauses.push(`${column} = $${values.length}`);
+        continue;
+      }
+    }
+
+    values.push(value);
+    clauses.push(`${column} = $${values.length}`);
   }
-  globalForPrisma.prisma = createClient();
-  return globalForPrisma.prisma;
+
+  return clauses.join(" AND ");
 }
 
-/** Recover from Supabase closing idle pool connections. */
+function buildUpdate(data: Record<string, any>, values: any[]) {
+  const assignments: string[] = [];
+  for (const [key, value] of Object.entries(data)) {
+    const column = quoteIdentifier(key);
+    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+      if ("increment" in value) {
+        values.push(value.increment);
+        assignments.push(`${column} = ${column} + $${values.length}`);
+        continue;
+      }
+      if ("decrement" in value) {
+        values.push(value.decrement);
+        assignments.push(`${column} = ${column} - $${values.length}`);
+        continue;
+      }
+    }
+    values.push(value);
+    assignments.push(`${column} = $${values.length}`);
+  }
+  return assignments.join(", ");
+}
+
+async function exec<T>(text: string, params: any[] = []) {
+  return pool.query<T>(text, params);
+}
+
+function getTableName(key: string) {
+  return pascalCase(key);
+}
+
+function createTableClient(tableKey: string) {
+  const tableName = getTableName(tableKey);
+
+  return {
+    findMany: async (args: any = {}) => {
+      const values: any[] = [];
+      const select = buildSelect(args.select);
+      const whereClause = buildWhere(args.where, values);
+      const orderBy = buildOrderBy(args.orderBy);
+      const limit = args.take ? `LIMIT ${Number(args.take)}` : "";
+      const offset = args.skip ? `OFFSET ${Number(args.skip)}` : "";
+      const sql = `SELECT ${select} FROM ${quoteIdentifier(tableName)}${whereClause ? ` WHERE ${whereClause}` : ""} ${orderBy} ${limit} ${offset}`;
+      const result = await exec<any>(sql.trim(), values);
+      return result.rows;
+    },
+    findUnique: async (args: any) => {
+      const results = await createTableClient(tableKey).findMany({ ...args, take: 1 });
+      return results[0] ?? null;
+    },
+    findFirst: async (args: any) => {
+      const results = await createTableClient(tableKey).findMany({ ...args, take: 1 });
+      return results[0] ?? null;
+    },
+    count: async (args: any = {}) => {
+      const values: any[] = [];
+      const whereClause = buildWhere(args.where, values);
+      const sql = `SELECT COUNT(*) AS count FROM ${quoteIdentifier(tableName)}${whereClause ? ` WHERE ${whereClause}` : ""}`;
+      const result = await exec<{ count: string }>(sql, values);
+      return parseInt(result.rows[0]?.count ?? "0", 10);
+    },
+    create: async (args: any) => {
+      const values: any[] = [];
+      const columns = Object.keys(args.data).map(quoteIdentifier).join(", ");
+      const placeholders = Object.keys(args.data)
+        .map((key) => {
+          values.push(args.data[key]);
+          return `$${values.length}`;
+        })
+        .join(", ");
+      const sql = `INSERT INTO ${quoteIdentifier(tableName)} (${columns}) VALUES (${placeholders}) RETURNING *`;
+      const result = await exec<any>(sql, values);
+      return result.rows[0];
+    },
+    update: async (args: any) => {
+      const values: any[] = [];
+      const setClause = buildUpdate(args.data, values);
+      const whereClause = buildWhere(args.where, values);
+      const sql = `UPDATE ${quoteIdentifier(tableName)} SET ${setClause}${whereClause ? ` WHERE ${whereClause}` : ""} RETURNING *`;
+      const result = await exec<any>(sql, values);
+      return result.rows[0] ?? null;
+    },
+    delete: async (args: any) => {
+      const values: any[] = [];
+      const whereClause = buildWhere(args.where, values);
+      const sql = `DELETE FROM ${quoteIdentifier(tableName)}${whereClause ? ` WHERE ${whereClause}` : ""}`;
+      await exec(sql, values);
+      return { count: 1 };
+    },
+    upsert: async (args: any) => {
+      const values: any[] = [];
+      const createColumns = Object.keys(args.create).map(quoteIdentifier).join(", ");
+      const createPlaceholders = Object.keys(args.create)
+        .map((key) => {
+          values.push(args.create[key]);
+          return `$${values.length}`;
+        })
+        .join(", ");
+      const conflictColumns = Object.keys(args.where).map(quoteIdentifier).join(", ");
+      const updateClause = buildUpdate(args.update, values);
+      const sql = `INSERT INTO ${quoteIdentifier(tableName)} (${createColumns}) VALUES (${createPlaceholders}) ON CONFLICT (${conflictColumns}) DO UPDATE SET ${updateClause} RETURNING *`;
+      const result = await exec<any>(sql, values);
+      return result.rows[0];
+    },
+  };
+}
+
+const prisma = new Proxy(
+  {},
+  {
+    get(target, prop) {
+      if (typeof prop !== "string") return undefined;
+      return createTableClient(prop);
+    },
+  }
+);
+
 export async function ensureDb() {
-  const client = getPrisma();
-  try {
-    await client.$queryRaw`SELECT 1`;
-    return client;
-  } catch {
-    const fresh = await resetClient();
-    await fresh.$queryRaw`SELECT 1`;
-    return fresh;
-  }
-}
-
-/** Run a DB query with one automatic reconnect retry. */
-export async function withDb<T>(fn: (client: PrismaClient) => Promise<T>): Promise<T> {
-  try {
-    return await fn(getPrisma());
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    const retryable =
-      message.includes("ConnectionReset") ||
-      message.includes("connection pool") ||
-      message.includes("Can't reach database") ||
-      message.includes("Closed") ||
-      message.includes("ECONNRESET");
-
-    if (!retryable) throw err;
-
-    const fresh = await resetClient();
-    return fn(fresh);
-  }
+  await exec("SELECT 1");
 }
 
 export function validateDatabaseUrl() {
   const url = process.env.DATABASE_URL || "";
   if (!url) {
     console.warn("DATABASE_URL is not set.");
-    return;
-  }
-  if (url.includes("pooler.supabase.com:5432")) {
-    console.warn(
-      "[DB] DATABASE_URL uses Supabase pooler port 5432 (session mode). " +
-        "Prisma works best with port 6543 (transaction mode). " +
-        "Update .env to: ...pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=5&pool_timeout=20&connect_timeout=30"
-    );
   }
 }
 
