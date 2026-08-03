@@ -71,3 +71,4 @@ export function getEnvAdminCredentials() {
 export function isEnvAdminAuth(userId: string) {
   return userId === ENV_ADMIN_ID;
 }
+

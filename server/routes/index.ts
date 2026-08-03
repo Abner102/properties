@@ -34,3 +34,4 @@ router.use(catalogRoutes);
 router.use("/admin", adminRoutes);
 
 export default router;
+

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import prisma from "../lib/prisma";
+import db from "../lib/db";
 
 const router = Router();
 
@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
   try {
     const data = inquirySchema.parse(req.body);
 
-    const inquiry = await prisma.inquiry.create({
+    const inquiry = await db.inquiry.create({
       data: {
         type: data.type,
         name: data.name,
@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
       },
     });
 
-    await prisma.notification.create({
+    await db.notification.create({
       data: {
         type: "inquiry",
         title: `New ${data.type} inquiry from ${data.name}`,
@@ -47,3 +47,4 @@ router.post("/", async (req, res) => {
 });
 
 export default router;
+

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import prisma from "../lib/prisma";
+import db from "../lib/db";
 import { getProductsByCategories, getProductBySlug } from "../lib/products";
 
 const router = Router();
@@ -26,7 +26,7 @@ router.get("/:slug", async (req, res) => {
 
   if (product) {
     try {
-      await prisma.product.update({
+      await db.product.update({
         where: { slug },
         data: { views: { increment: 1 } },
       });
@@ -40,3 +40,4 @@ router.get("/:slug", async (req, res) => {
 });
 
 export default router;
+

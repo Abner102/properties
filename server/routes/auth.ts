@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import prisma from "../lib/prisma";
+import db from "../lib/db";
 import {
   verifyPassword,
   signAccessToken,
@@ -16,6 +16,15 @@ import { logActivity } from "../lib/api-helpers";
 import { omitPassword, withMongoId } from "../lib/serialize";
 
 const router = Router();
+
+type DbUser = {
+  id: string;
+  email: string;
+  password: string;
+  role: string;
+  suspended?: boolean;
+  name?: string | null;
+};
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -47,9 +56,9 @@ router.post("/login", async (req, res) => {
     const email = rawEmail.trim().toLowerCase();
     const ip = (req.headers["x-forwarded-for"] as string) || "unknown";
 
-    let user;
+    let user: DbUser | null = null;
     try {
-      user = await prisma.user.findUnique({ where: { email } });
+      user = (await db.user.findUnique({ where: { email } })) as DbUser | null;
     } catch {
       const result = envAdminLogin(email, password, res);
       if (result) return res.json(result);
@@ -61,7 +70,7 @@ router.post("/login", async (req, res) => {
     const success = user && (await verifyPassword(password, user.password));
 
     try {
-      await prisma.loginAttempt.create({
+      await db.loginAttempt.create({
         data: {
           email,
           ip,
@@ -90,7 +99,7 @@ router.post("/login", async (req, res) => {
     });
     const refreshToken = signRefreshToken({ userId: user.id });
 
-    await prisma.user.update({
+    await db.user.update({
       where: { id: user.id },
       data: { refreshToken, lastLogin: new Date() },
     });
@@ -114,7 +123,7 @@ router.post("/logout", async (req, res) => {
   const auth = getAuthUserFromRequest(req.cookies as Record<string, string | undefined>);
   if (auth && !isEnvAdminAuth(auth.userId)) {
     try {
-      await prisma.user.update({
+      await db.user.update({
         where: { id: auth.userId },
         data: { refreshToken: null },
       });
@@ -136,7 +145,7 @@ async function getSessionUser(req: import("express").Request) {
   }
 
   try {
-    const user = await prisma.user.findUnique({ where: { id: auth.userId } });
+    const user = await db.user.findUnique({ where: { id: auth.userId } });
     return withMongoId(user ? omitPassword(user) : null);
   } catch {
     return null;
@@ -159,3 +168,4 @@ router.get("/logout", async (req, res) => {
 });
 
 export default router;
+

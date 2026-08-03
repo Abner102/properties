@@ -1,5 +1,5 @@
 import { Router } from "express";
-import prisma from "../lib/prisma";
+import db from "../lib/db";
 import { requireAuth, slugify, logActivity } from "../lib/api-helpers";
 import { generateProductCode } from "../lib/constants";
 import { withMongoId, withMongoIds } from "../lib/serialize";
@@ -41,13 +41,13 @@ router.get("/", async (req, res) => {
               : { createdAt: "desc" };
 
     const [products, total] = await Promise.all([
-      prisma.product.findMany({
+      db.product.findMany({
         where,
         orderBy,
         skip: (page - 1) * limit,
         take: limit,
       }),
-      prisma.product.count({ where }),
+      db.product.count({ where }),
     ]);
 
     return res.json({
@@ -70,7 +70,7 @@ router.post("/", async (req, res) => {
     const slug = body.slug || slugify(body.name);
     const productCode = body.productCode || generateProductCode(body.category || "gen");
 
-    const product = await prisma.product.create({
+    const product = await db.product.create({
       data: { ...body, slug, productCode },
     });
     return res.status(201).json(withMongoId(product));
@@ -82,7 +82,7 @@ router.post("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const product = await prisma.product.findUnique({ where: { id: req.params.id } });
+    const product = await db.product.findUnique({ where: { id: req.params.id } });
     if (!product) return res.status(404).json({ error: "Not found" });
     return res.json(withMongoId(product));
   } catch {
@@ -95,10 +95,11 @@ router.put("/:id", async (req, res) => {
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
 
   try {
-    const product = await prisma.product.update({
+    const product = await db.product.update({
       where: { id: req.params.id },
       data: req.body,
     });
+    if (!product) return res.status(404).json({ error: "Not found" });
     await logActivity(auth.user!._id.toString(), "update", "Product", req.params.id, { name: product.name }, req);
     return res.json(withMongoId(product));
   } catch {
@@ -111,7 +112,7 @@ router.delete("/:id", async (req, res) => {
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
 
   try {
-    await prisma.product.delete({ where: { id: req.params.id } });
+    await db.product.delete({ where: { id: req.params.id } });
     await logActivity(auth.user!._id.toString(), "delete", "Product", req.params.id, {}, req);
     return res.json({ success: true });
   } catch {
@@ -153,12 +154,12 @@ router.patch("/:id", async (req, res) => {
         updates.featured = false;
         break;
       case "duplicate": {
-        const original = await prisma.product.findUnique({ where: { id: req.params.id } });
+        const original = await db.product.findUnique({ where: { id: req.params.id } });
         if (!original) return res.status(404).json({ error: "Not found" });
         const { id: _id, productCode: _code, slug: originalSlug, createdAt, updatedAt, ...rest } = original;
-        const dup = await prisma.product.create({
+        const dup = await db.product.create({
           data: {
-            ...(rest as Prisma.ProductCreateInput),
+            ...rest,
             name: `${original.name} (Copy)`,
             slug: `${originalSlug}-copy-${Date.now()}`,
             productCode: `EIP-COPY-${Date.now().toString(36).toUpperCase()}`,
@@ -171,7 +172,7 @@ router.patch("/:id", async (req, res) => {
         return res.status(400).json({ error: "Invalid action" });
     }
 
-    const product = await prisma.product.update({
+    const product = await db.product.update({
       where: { id: req.params.id },
       data: updates,
     });
@@ -182,3 +183,4 @@ router.patch("/:id", async (req, res) => {
 });
 
 export default router;
+

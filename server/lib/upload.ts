@@ -37,3 +37,4 @@ export function createImageUpload(folder: string) {
 export function publicUploadUrl(folder: string, filename: string) {
   return `/uploads/${folder}/${filename}`;
 }
+

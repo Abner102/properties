@@ -1,12 +1,12 @@
 import { Router } from "express";
-import prisma from "../lib/prisma";
+import db from "../lib/db";
 import { withMongoId, withMongoIds } from "../lib/serialize";
 
 const router = Router();
 
 router.get("/", async (_req, res) => {
   try {
-    const projects = await prisma.softwareProject.findMany({
+    const projects = await db.softwareProject.findMany({
       where: { published: true },
       orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
     });
@@ -18,7 +18,7 @@ router.get("/", async (_req, res) => {
 
 router.get("/:slug", async (req, res) => {
   try {
-    const project = await prisma.softwareProject.findFirst({
+    const project = await db.softwareProject.findFirst({
       where: { slug: req.params.slug, published: true },
     });
     if (!project) return res.status(404).json({ error: "Project not found" });
@@ -29,3 +29,4 @@ router.get("/:slug", async (req, res) => {
 });
 
 export default router;
+

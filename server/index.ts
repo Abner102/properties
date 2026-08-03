@@ -6,7 +6,7 @@ import path from "path";
 import { config as loadEnv } from "dotenv";
 import apiRoutes from "./routes";
 import { uploadsRoot } from "./lib/paths";
-import { ensureDb, validateDatabaseUrl } from "./lib/prisma";
+import { ensureDb, validateDatabaseUrl } from "./lib/db";
 
 loadEnv();
 validateDatabaseUrl();
@@ -79,3 +79,4 @@ app.listen(PORT, async () => {
 });
 
 export default app;
+

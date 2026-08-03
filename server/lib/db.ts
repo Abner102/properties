@@ -1,4 +1,30 @@
-import { Pool } from "pg";
+import { Pool, QueryResultRow } from "pg";
+
+type DbRow = Record<string, unknown>;
+type DbSelect = Record<string, boolean> | string[];
+type DbValue = string | number | boolean | null | undefined | Date | DbValue[] | Record<string, unknown>;
+type DbWhere = Record<string, DbValue>;
+
+type DbArgs = {
+  select?: DbSelect;
+  where?: DbWhere;
+  orderBy?: unknown;
+  skip?: number;
+  take?: number;
+};
+
+type TableClient = {
+  findMany(args?: DbArgs): Promise<DbRow[]>;
+  findUnique(args: { where: DbWhere; select?: DbSelect }): Promise<DbRow | null>;
+  findFirst(args?: DbArgs): Promise<DbRow | null>;
+  count(args?: { where?: DbWhere }): Promise<number>;
+  create(args: { data: DbRow }): Promise<DbRow>;
+  update(args: { where: DbWhere; data: DbRow }): Promise<DbRow | null>;
+  delete(args: { where: DbWhere }): Promise<{ count: number }>;
+  upsert(args: { where: DbWhere; create: DbRow; update: DbRow }): Promise<DbRow>;
+};
+
+type DbClient = Record<string, TableClient>;
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
@@ -35,7 +61,7 @@ function buildSelect(select: Record<string, boolean> | string[] | undefined) {
     .join(", ") || "*";
 }
 
-function buildOrderBy(orderBy: any) {
+function buildOrderBy(orderBy: unknown) {
   if (!orderBy) return "";
   const entries = Array.isArray(orderBy) ? orderBy : [orderBy];
   const clauses = entries
@@ -47,7 +73,7 @@ function buildOrderBy(orderBy: any) {
   return clauses ? `ORDER BY ${clauses}` : "";
 }
 
-function buildWhere(where: any, values: any[]): string {
+function buildWhere(where: unknown, values: unknown[]): string {
   if (!where || typeof where !== "object" || Array.isArray(where)) return "";
   const clauses: string[] = [];
 
@@ -113,7 +139,7 @@ function buildWhere(where: any, values: any[]): string {
   return clauses.join(" AND ");
 }
 
-function buildUpdate(data: Record<string, any>, values: any[]) {
+function buildUpdate(data: DbRow, values: unknown[]) {
   const assignments: string[] = [];
   for (const [key, value] of Object.entries(data)) {
     const column = quoteIdentifier(key);
@@ -135,7 +161,7 @@ function buildUpdate(data: Record<string, any>, values: any[]) {
   return assignments.join(", ");
 }
 
-async function exec<T>(text: string, params: any[] = []) {
+async function exec<T extends QueryResultRow = DbRow>(text: string, params: unknown[] = []) {
   return pool.query<T>(text, params);
 }
 
@@ -147,34 +173,34 @@ function createTableClient(tableKey: string) {
   const tableName = getTableName(tableKey);
 
   return {
-    findMany: async (args: any = {}) => {
-      const values: any[] = [];
+    findMany: async (args: DbArgs = {}) => {
+      const values: unknown[] = [];
       const select = buildSelect(args.select);
       const whereClause = buildWhere(args.where, values);
       const orderBy = buildOrderBy(args.orderBy);
       const limit = args.take ? `LIMIT ${Number(args.take)}` : "";
       const offset = args.skip ? `OFFSET ${Number(args.skip)}` : "";
       const sql = `SELECT ${select} FROM ${quoteIdentifier(tableName)}${whereClause ? ` WHERE ${whereClause}` : ""} ${orderBy} ${limit} ${offset}`;
-      const result = await exec<any>(sql.trim(), values);
+      const result = await exec<DbRow>(sql.trim(), values);
       return result.rows;
     },
-    findUnique: async (args: any) => {
+    findUnique: async (args: DbArgs) => {
       const results = await createTableClient(tableKey).findMany({ ...args, take: 1 });
       return results[0] ?? null;
     },
-    findFirst: async (args: any) => {
+    findFirst: async (args: DbArgs = {}) => {
       const results = await createTableClient(tableKey).findMany({ ...args, take: 1 });
       return results[0] ?? null;
     },
-    count: async (args: any = {}) => {
-      const values: any[] = [];
+    count: async (args: DbArgs = {}) => {
+      const values: unknown[] = [];
       const whereClause = buildWhere(args.where, values);
       const sql = `SELECT COUNT(*) AS count FROM ${quoteIdentifier(tableName)}${whereClause ? ` WHERE ${whereClause}` : ""}`;
       const result = await exec<{ count: string }>(sql, values);
       return parseInt(result.rows[0]?.count ?? "0", 10);
     },
-    create: async (args: any) => {
-      const values: any[] = [];
+    create: async (args: { data: DbRow }) => {
+      const values: unknown[] = [];
       const columns = Object.keys(args.data).map(quoteIdentifier).join(", ");
       const placeholders = Object.keys(args.data)
         .map((key) => {
@@ -183,26 +209,26 @@ function createTableClient(tableKey: string) {
         })
         .join(", ");
       const sql = `INSERT INTO ${quoteIdentifier(tableName)} (${columns}) VALUES (${placeholders}) RETURNING *`;
-      const result = await exec<any>(sql, values);
+      const result = await exec<DbRow>(sql, values);
       return result.rows[0];
     },
-    update: async (args: any) => {
-      const values: any[] = [];
+    update: async (args: { where: DbWhere; data: DbRow }) => {
+      const values: unknown[] = [];
       const setClause = buildUpdate(args.data, values);
       const whereClause = buildWhere(args.where, values);
       const sql = `UPDATE ${quoteIdentifier(tableName)} SET ${setClause}${whereClause ? ` WHERE ${whereClause}` : ""} RETURNING *`;
-      const result = await exec<any>(sql, values);
+      const result = await exec<DbRow>(sql, values);
       return result.rows[0] ?? null;
     },
-    delete: async (args: any) => {
-      const values: any[] = [];
+    delete: async (args: { where: DbWhere }) => {
+      const values: unknown[] = [];
       const whereClause = buildWhere(args.where, values);
       const sql = `DELETE FROM ${quoteIdentifier(tableName)}${whereClause ? ` WHERE ${whereClause}` : ""}`;
       await exec(sql, values);
       return { count: 1 };
     },
-    upsert: async (args: any) => {
-      const values: any[] = [];
+    upsert: async (args: { where: DbWhere; create: DbRow; update: DbRow }) => {
+      const values: unknown[] = [];
       const createColumns = Object.keys(args.create).map(quoteIdentifier).join(", ");
       const createPlaceholders = Object.keys(args.create)
         .map((key) => {
@@ -213,21 +239,18 @@ function createTableClient(tableKey: string) {
       const conflictColumns = Object.keys(args.where).map(quoteIdentifier).join(", ");
       const updateClause = buildUpdate(args.update, values);
       const sql = `INSERT INTO ${quoteIdentifier(tableName)} (${createColumns}) VALUES (${createPlaceholders}) ON CONFLICT (${conflictColumns}) DO UPDATE SET ${updateClause} RETURNING *`;
-      const result = await exec<any>(sql, values);
+      const result = await exec<DbRow>(sql, values);
       return result.rows[0];
     },
   };
 }
 
-const prisma = new Proxy(
-  {},
-  {
-    get(target, prop) {
-      if (typeof prop !== "string") return undefined;
-      return createTableClient(prop);
-    },
-  }
-);
+const db = new Proxy({} as DbClient, {
+  get(target, prop) {
+    if (typeof prop !== "string") return undefined;
+    return createTableClient(prop);
+  },
+});
 
 export async function ensureDb() {
   await exec("SELECT 1");
@@ -240,4 +263,5 @@ export function validateDatabaseUrl() {
   }
 }
 
-export default prisma;
+export default db;
+

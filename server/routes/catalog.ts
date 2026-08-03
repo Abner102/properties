@@ -1,5 +1,5 @@
 import { Router } from "express";
-import prisma from "../lib/prisma";
+import db from "../lib/db";
 import { requireAuth, slugify } from "../lib/api-helpers";
 import { generateProductCode } from "../lib/constants";
 import {
@@ -35,7 +35,7 @@ router.post("/properties", async (req, res) => {
     const body = req.body;
     const slug = body.slug || slugify(body.title || body.name);
     const category = body.category || "houses";
-    const product = await prisma.product.create({
+    const product = await db.product.create({
       data: {
         ...body,
         name: body.title || body.name,
@@ -67,7 +67,7 @@ router.post("/cars", async (req, res) => {
   try {
     const body = req.body;
     const slug = body.slug || slugify(`${body.brand}-${body.model}`);
-    const product = await prisma.product.create({
+    const product = await db.product.create({
       data: {
         ...body,
         name: `${body.brand} ${body.model}`,
@@ -99,7 +99,7 @@ router.post("/lands", async (req, res) => {
   try {
     const body = req.body;
     const slug = body.slug || slugify(body.title || body.name);
-    const product = await prisma.product.create({
+    const product = await db.product.create({
       data: {
         ...body,
         name: body.title || body.name,
@@ -117,7 +117,7 @@ router.post("/lands", async (req, res) => {
 
 router.get("/projects", async (_req, res) => {
   try {
-    const projects = await prisma.softwareProject.findMany({
+    const projects = await db.softwareProject.findMany({
       where: { published: true },
       orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
     });
@@ -130,7 +130,7 @@ router.get("/projects", async (_req, res) => {
 
 router.get("/projects/:slug", async (req, res) => {
   try {
-    const project = await prisma.softwareProject.findFirst({
+    const project = await db.softwareProject.findFirst({
       where: { slug: req.params.slug, published: true },
     });
     if (!project) return res.status(404).json({ error: "Project not found" });
@@ -148,7 +148,7 @@ router.post("/projects", async (req, res) => {
   try {
     const body = req.body;
     if (!body.slug) body.slug = slugify(body.name);
-    const project = await prisma.softwareProject.create({ data: body });
+    const project = await db.softwareProject.create({ data: body });
     return res.status(201).json(withMongoId(project));
   } catch {
     return res.status(500).json({ error: "Failed to create project" });
@@ -156,3 +156,4 @@ router.post("/projects", async (req, res) => {
 });
 
 export default router;
+

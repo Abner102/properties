@@ -22,3 +22,4 @@ router.get("/:folder/:filename", (req, res) => {
 });
 
 export default router;
+

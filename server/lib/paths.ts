@@ -12,3 +12,4 @@ export const uploadsRoot = path.join(projectRoot, "public", "uploads");
 export function uploadFilePath(folder: string, filename: string): string {
   return path.resolve(uploadsRoot, folder, filename);
 }
+

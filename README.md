@@ -10,7 +10,7 @@ A premium, enterprise-grade corporate website and admin dashboard for Endless In
 |-------|-----------|
 | Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS 4, Framer Motion |
 | Backend | Next.js API Routes (Node.js) |
-| Database | SQLite (dev) / PostgreSQL (production) via Prisma ORM |
+| Database | Supabase PostgreSQL |
 | Auth | JWT + bcrypt password hashing |
 | Themes | Dark & Light mode (next-themes) |
 | Storage | Cloudinary-ready (configure in `.env`) |
@@ -19,7 +19,11 @@ A premium, enterprise-grade corporate website and admin dashboard for Endless In
 
 ```bash
 npm install
-npm run db:setup    # Create database & seed admin user
+```
+
+Then run `sql/schema.sql` and `sql/seed.sql` in Supabase or `psql` before starting the app.
+
+```bash
 npm run dev         # Start at http://localhost:3000
 ```
 
@@ -106,4 +110,4 @@ Set `DATABASE_URL` to your Supabase PostgreSQL connection string.
 
 - **Content:** Edit files in `src/data/` or use the admin dashboard
 - **Images:** Replace Unsplash URLs with your assets in `/public/images/`
-- **Branding:** Update `src/data/site.ts` and `prisma/seed.ts`
+- **Branding:** Update `src/data/site.ts` and `sql/seed.sql`

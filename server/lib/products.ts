@@ -1,4 +1,4 @@
-import prisma from "./prisma";
+import db from "./db";
 import { properties as staticProperties, type Property } from "../../src/data/properties";
 import { cars as staticCars, type Car } from "../../src/data/cars";
 
@@ -142,7 +142,7 @@ export async function getProductsByCategories(
   options?: { featured?: boolean; limit?: number }
 ): Promise<PublicProduct[]> {
   try {
-    const products = await prisma.product.findMany({
+    const products = await db.product.findMany({
       where: {
         category: { in: categories },
         status: { in: ["published", "available"] },
@@ -181,7 +181,7 @@ export async function getProductsByCategories(
 
 export async function getProductBySlug(slug: string): Promise<PublicProduct | null> {
   try {
-    const product = await prisma.product.findUnique({ where: { slug } });
+    const product = await db.product.findUnique({ where: { slug } });
     if (product) return mapDbProduct(product);
   } catch {
     // fall through
@@ -198,10 +198,10 @@ export async function getProductBySlug(slug: string): Promise<PublicProduct | nu
 
 export async function getAllProductSlugs(categories?: string[]): Promise<string[]> {
   try {
-    const products = await prisma.product.findMany({
+    const products = await db.product.findMany({
       where: categories ? { category: { in: categories } } : undefined,
       select: { slug: true },
-    });
+    }) as Array<{ slug: string }>;
     if (products.length > 0) return products.map((p) => p.slug);
   } catch {
     // fall through
@@ -297,3 +297,4 @@ export function toLandListing(p: PublicProduct): LandListing {
     description: p.description,
   };
 }
+

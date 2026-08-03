@@ -1,12 +1,12 @@
 import { Router } from "express";
-import prisma from "../lib/prisma";
+import db from "../lib/db";
 import { withMongoId } from "../lib/serialize";
 
 const router = Router();
 
 router.get("/", async (_req, res) => {
   try {
-    const settings = await prisma.settings.findUnique({ where: { key: "default" } });
+    const settings = await db.settings.findUnique({ where: { key: "default" } });
     return res.json(withMongoId(settings));
   } catch {
     return res.json(null);
@@ -14,3 +14,4 @@ router.get("/", async (_req, res) => {
 });
 
 export default router;
+

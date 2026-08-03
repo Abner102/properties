@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import prisma from "../lib/prisma";
+import db from "../lib/db";
 
 const router = Router();
 
@@ -9,7 +9,7 @@ const schema = z.object({ email: z.string().email() });
 router.post("/", async (req, res) => {
   try {
     const { email } = schema.parse(req.body);
-    await prisma.newsletter.upsert({
+    await db.newsletter.upsert({
       where: { email },
       update: { active: true },
       create: { email, active: true },
@@ -21,3 +21,4 @@ router.post("/", async (req, res) => {
 });
 
 export default router;
+

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import prisma from "../lib/prisma";
+import db from "../lib/db";
 import { requireAuth, slugify } from "../lib/api-helpers";
 import { hashPassword } from "../lib/auth";
 import { ROLES } from "../lib/constants";
@@ -37,41 +37,41 @@ router.get("/stats", async (req, res) => {
       carInquiries,
       generalInquiries,
     ] = await Promise.all([
-      prisma.product.count(),
-      prisma.product.count({ where: { category: "houses" } }),
-      prisma.product.count({ where: { category: "lands" } }),
-      prisma.product.count({ where: { category: "apartments" } }),
-      prisma.product.count({ where: { category: "commercial" } }),
-      prisma.product.count({ where: { category: "cars" } }),
-      prisma.product.count({ where: { category: "luxury-assets" } }),
-      prisma.product.count({ where: { category: "software-services" } }),
-      prisma.blog.count(),
-      prisma.team.count(),
-      prisma.user.count(),
-      prisma.inquiry.count(),
-      prisma.inquiry.count({ where: { type: { in: ["property", "contact"] } } }),
-      prisma.inquiry.count({ where: { type: "software" } }),
-      prisma.inquiry.count({ where: { status: "new" } }),
-      prisma.newsletter.count({ where: { active: true } }),
-      prisma.softwareProject.count(),
-      prisma.category.count(),
-      prisma.product.findMany({
+      db.product.count(),
+      db.product.count({ where: { category: "houses" } }),
+      db.product.count({ where: { category: "lands" } }),
+      db.product.count({ where: { category: "apartments" } }),
+      db.product.count({ where: { category: "commercial" } }),
+      db.product.count({ where: { category: "cars" } }),
+      db.product.count({ where: { category: "luxury-assets" } }),
+      db.product.count({ where: { category: "software-services" } }),
+      db.blog.count(),
+      db.team.count(),
+      db.user.count(),
+      db.inquiry.count(),
+      db.inquiry.count({ where: { type: { in: ["property", "contact"] } } }),
+      db.inquiry.count({ where: { type: "software" } }),
+      db.inquiry.count({ where: { status: "new" } }),
+      db.newsletter.count({ where: { active: true } }),
+      db.softwareProject.count(),
+      db.category.count(),
+      db.product.findMany({
         orderBy: { createdAt: "desc" },
         take: 5,
         select: { id: true, name: true, category: true, status: true, price: true, createdAt: true },
       }),
-      prisma.inquiry.findMany({
+      db.inquiry.findMany({
         orderBy: { createdAt: "desc" },
         take: 8,
         select: { id: true, name: true, type: true, status: true, createdAt: true },
       }),
-      prisma.notification.findMany({
+      db.notification.findMany({
         where: { read: false },
         orderBy: { createdAt: "desc" },
         take: 10,
       }),
-      prisma.inquiry.count({ where: { type: "car" } }),
-      prisma.inquiry.count({ where: { type: "general" } }),
+      db.inquiry.count({ where: { type: "car" } }),
+      db.inquiry.count({ where: { type: "general" } }),
     ]);
 
     const monthlyVisitors = [
@@ -83,7 +83,7 @@ router.get("/stats", async (req, res) => {
       { month: "Jun", visitors: 9400, views: 28200 },
     ];
 
-    const topProperties = await prisma.product.findMany({
+    const topProperties = await db.product.findMany({
       where: { views: { gt: 0 } },
       orderBy: { views: "desc" },
       take: 5,
@@ -162,7 +162,7 @@ router.get("/search", async (req, res) => {
   if (!q || q.length < 2) return res.json({ results: [] });
 
   const [products, blogs, projects, users] = await Promise.all([
-    prisma.product.findMany({
+    db.product.findMany({
       where: {
         OR: [
           { name: { contains: q, mode: "insensitive" } },
@@ -173,7 +173,7 @@ router.get("/search", async (req, res) => {
       take: 10,
       select: { id: true, name: true, slug: true, category: true, price: true, status: true },
     }),
-    prisma.blog.findMany({
+    db.blog.findMany({
       where: {
         OR: [
           { title: { contains: q, mode: "insensitive" } },
@@ -183,7 +183,7 @@ router.get("/search", async (req, res) => {
       take: 5,
       select: { id: true, title: true, slug: true, category: true },
     }),
-    prisma.softwareProject.findMany({
+    db.softwareProject.findMany({
       where: {
         OR: [
           { name: { contains: q, mode: "insensitive" } },
@@ -193,7 +193,7 @@ router.get("/search", async (req, res) => {
       take: 5,
       select: { id: true, name: true, slug: true, industry: true },
     }),
-    prisma.user.findMany({
+    db.user.findMany({
       where: {
         OR: [
           { name: { contains: q, mode: "insensitive" } },
@@ -217,7 +217,7 @@ router.get("/search", async (req, res) => {
 
 router.get("/settings", async (_req, res) => {
   try {
-    const settings = await prisma.settings.findUnique({ where: { key: "default" } });
+    const settings = await db.settings.findUnique({ where: { key: "default" } });
     return res.json(withMongoId(settings));
   } catch {
     return res.json(null);
@@ -228,7 +228,7 @@ router.put("/settings", async (req, res) => {
   const auth = await requireAuth(req, "settings");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
 
-  const settings = await prisma.settings.upsert({
+  const settings = await db.settings.upsert({
     where: { key: "default" },
     update: { ...req.body, key: "default" },
     create: { ...req.body, key: "default" },
@@ -239,7 +239,7 @@ router.put("/settings", async (req, res) => {
 router.get("/blog", async (req, res) => {
   const auth = await requireAuth(req, "blog");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  const posts = await prisma.blog.findMany({ orderBy: { createdAt: "desc" } });
+  const posts = await db.blog.findMany({ orderBy: { createdAt: "desc" } });
   return res.json(withMongoIds(posts));
 });
 
@@ -248,28 +248,28 @@ router.post("/blog", async (req, res) => {
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
   const body = req.body;
   if (!body.slug) body.slug = slugify(body.title);
-  const post = await prisma.blog.create({ data: body });
+  const post = await db.blog.create({ data: body });
   return res.status(201).json(withMongoId(post));
 });
 
 router.put("/blog/:id", async (req, res) => {
   const auth = await requireAuth(req, "blog");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  const item = await prisma.blog.update({ where: { id: req.params.id }, data: req.body });
+  const item = await db.blog.update({ where: { id: req.params.id }, data: req.body });
   return res.json(withMongoId(item));
 });
 
 router.delete("/blog/:id", async (req, res) => {
   const auth = await requireAuth(req, "blog");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  await prisma.blog.delete({ where: { id: req.params.id } });
+  await db.blog.delete({ where: { id: req.params.id } });
   return res.json({ success: true });
 });
 
 router.get("/categories", async (req, res) => {
   const auth = await requireAuth(req, "categories");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  const items = await prisma.category.findMany({ orderBy: { order: "asc" } });
+  const items = await db.category.findMany({ orderBy: { order: "asc" } });
   return res.json(withMongoIds(items));
 });
 
@@ -278,28 +278,28 @@ router.post("/categories", async (req, res) => {
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
   const body = req.body;
   if (!body.slug) body.slug = slugify(body.name);
-  const item = await prisma.category.create({ data: body });
+  const item = await db.category.create({ data: body });
   return res.status(201).json(withMongoId(item));
 });
 
 router.put("/categories/:id", async (req, res) => {
   const auth = await requireAuth(req, "categories");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  const item = await prisma.category.update({ where: { id: req.params.id }, data: req.body });
+  const item = await db.category.update({ where: { id: req.params.id }, data: req.body });
   return res.json(withMongoId(item));
 });
 
 router.delete("/categories/:id", async (req, res) => {
   const auth = await requireAuth(req, "categories");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  await prisma.category.delete({ where: { id: req.params.id } });
+  await db.category.delete({ where: { id: req.params.id } });
   return res.json({ success: true });
 });
 
 router.get("/inquiries", async (req, res) => {
   const auth = await requireAuth(req, "inquiries");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  const items = await prisma.inquiry.findMany({ orderBy: { createdAt: "desc" } });
+  const items = await db.inquiry.findMany({ orderBy: { createdAt: "desc" } });
   return res.json(withMongoIds(items));
 });
 
@@ -308,7 +308,7 @@ router.patch("/inquiries/:id", async (req, res) => {
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
 
   const body = req.body;
-  const inquiry = await prisma.inquiry.update({
+  const inquiry = await db.inquiry.update({
     where: { id: req.params.id },
     data: {
       ...body,
@@ -321,14 +321,14 @@ router.patch("/inquiries/:id", async (req, res) => {
 router.delete("/inquiries/:id", async (req, res) => {
   const auth = await requireAuth(req, "inquiries");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  await prisma.inquiry.delete({ where: { id: req.params.id } });
+  await db.inquiry.delete({ where: { id: req.params.id } });
   return res.json({ success: true });
 });
 
 router.get("/newsletter", async (req, res) => {
   const auth = await requireAuth(req, "newsletter");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  const items = await prisma.newsletter.findMany({
+  const items = await db.newsletter.findMany({
     where: { active: true },
     orderBy: { createdAt: "desc" },
   });
@@ -338,7 +338,7 @@ router.get("/newsletter", async (req, res) => {
 router.get("/notifications", async (req, res) => {
   const auth = await requireAuth(req, "dashboard");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  const notifications = await prisma.notification.findMany({
+  const notifications = await db.notification.findMany({
     orderBy: { createdAt: "desc" },
     take: 50,
   });
@@ -349,14 +349,14 @@ router.patch("/notifications", async (req, res) => {
   const auth = await requireAuth(req, "dashboard");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
   const { id, read } = req.body;
-  await prisma.notification.update({ where: { id }, data: { read } });
+  await db.notification.update({ where: { id }, data: { read } });
   return res.json({ success: true });
 });
 
 router.get("/projects", async (req, res) => {
   const auth = await requireAuth(req, "projects");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  const items = await prisma.softwareProject.findMany({ orderBy: { createdAt: "desc" } });
+  const items = await db.softwareProject.findMany({ orderBy: { createdAt: "desc" } });
   return res.json(withMongoIds(items));
 });
 
@@ -365,7 +365,7 @@ router.post("/projects", async (req, res) => {
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
   const body = req.body;
   if (!body.slug) body.slug = slugify(body.name);
-  const item = await prisma.softwareProject.create({ data: body });
+  const item = await db.softwareProject.create({ data: body });
   return res.status(201).json(withMongoId(item));
 });
 
@@ -380,7 +380,7 @@ router.put("/projects/:id", async (req, res) => {
     delete body.createdAt;
     delete body.updatedAt;
 
-    const item = await prisma.softwareProject.update({
+    const item = await db.softwareProject.update({
       where: { id: req.params.id },
       data: body,
     });
@@ -394,70 +394,70 @@ router.put("/projects/:id", async (req, res) => {
 router.delete("/projects/:id", async (req, res) => {
   const auth = await requireAuth(req, "projects");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  await prisma.softwareProject.delete({ where: { id: req.params.id } });
+  await db.softwareProject.delete({ where: { id: req.params.id } });
   return res.json({ success: true });
 });
 
 router.get("/team", async (req, res) => {
   const auth = await requireAuth(req, "team");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  const items = await prisma.team.findMany({ orderBy: { order: "asc" } });
+  const items = await db.team.findMany({ orderBy: { order: "asc" } });
   return res.json(withMongoIds(items));
 });
 
 router.post("/team", async (req, res) => {
   const auth = await requireAuth(req, "team");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  const item = await prisma.team.create({ data: req.body });
+  const item = await db.team.create({ data: req.body });
   return res.status(201).json(withMongoId(item));
 });
 
 router.put("/team/:id", async (req, res) => {
   const auth = await requireAuth(req, "team");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  const item = await prisma.team.update({ where: { id: req.params.id }, data: req.body });
+  const item = await db.team.update({ where: { id: req.params.id }, data: req.body });
   return res.json(withMongoId(item));
 });
 
 router.delete("/team/:id", async (req, res) => {
   const auth = await requireAuth(req, "team");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  await prisma.team.delete({ where: { id: req.params.id } });
+  await db.team.delete({ where: { id: req.params.id } });
   return res.json({ success: true });
 });
 
 router.get("/testimonials", async (req, res) => {
   const auth = await requireAuth(req, "testimonials");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  const items = await prisma.testimonial.findMany({ orderBy: { createdAt: "desc" } });
+  const items = await db.testimonial.findMany({ orderBy: { createdAt: "desc" } });
   return res.json(withMongoIds(items));
 });
 
 router.post("/testimonials", async (req, res) => {
   const auth = await requireAuth(req, "testimonials");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  const item = await prisma.testimonial.create({ data: req.body });
+  const item = await db.testimonial.create({ data: req.body });
   return res.status(201).json(withMongoId(item));
 });
 
 router.put("/testimonials/:id", async (req, res) => {
   const auth = await requireAuth(req, "testimonials");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  const item = await prisma.testimonial.update({ where: { id: req.params.id }, data: req.body });
+  const item = await db.testimonial.update({ where: { id: req.params.id }, data: req.body });
   return res.json(withMongoId(item));
 });
 
 router.delete("/testimonials/:id", async (req, res) => {
   const auth = await requireAuth(req, "testimonials");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  await prisma.testimonial.delete({ where: { id: req.params.id } });
+  await db.testimonial.delete({ where: { id: req.params.id } });
   return res.json({ success: true });
 });
 
 router.get("/users", async (req, res) => {
   const auth = await requireAuth(req, "users");
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
-  const users = await prisma.user.findMany({ orderBy: { createdAt: "desc" } });
+  const users = await db.user.findMany({ orderBy: { createdAt: "desc" } });
   return res.json(withMongoIds(users.map(omitPassword)));
 });
 
@@ -467,7 +467,7 @@ router.post("/users", async (req, res) => {
 
   const body = req.body;
   const role = ROLES.includes(body.role) ? body.role : "editor";
-  const user = await prisma.user.create({
+  const user = await db.user.create({
     data: {
       ...body,
       role,
@@ -486,3 +486,4 @@ router.get("/events", (_req, res) => {
 });
 
 export default router;
+
