@@ -81,11 +81,11 @@ ON CONFLICT ("slug") DO UPDATE SET
 INSERT INTO "SoftwareProject" (
   "id", "name", "slug", "industry", "liveUrl", "featured", "published", "description", "createdAt", "updatedAt"
 ) VALUES
-  ('project-nexora-sms', 'Nexora SMS', 'Communication', 'https://nexorasms.com', true, true, 'Enterprise bulk SMS platform.', now(), now()),
-  ('project-joscity', 'JosCity', 'Government', 'https://joscity.com', true, true, 'Digital city platform.', now(), now()),
-  ('project-afresh-center', 'Afresh Center', 'Healthcare', 'https://afreshcenter.org', true, true, 'Healthcare management platform.', now(), now()),
-  ('project-jobfinix', 'JobFinix', 'HR/Tech', 'https://jobfinix.com', true, true, 'Job marketplace.', now(), now()),
-  ('project-gatewav', 'Gatewav', 'Finance', 'https://gatewav.com', true, true, 'Payment gateway.', now(), now())
+  ('project-nexora-sms', 'Nexora SMS', 'nexora-sms', 'Communication', 'https://nexorasms.com', true, true, 'Enterprise bulk SMS platform.', now(), now()),
+  ('project-joscity', 'JosCity', 'joscity', 'Government', 'https://joscity.com', true, true, 'Digital city platform.', now(), now()),
+  ('project-afresh-center', 'Afresh Center', 'afresh-center', 'Healthcare', 'https://afreshcenter.org', true, true, 'Healthcare management platform.', now(), now()),
+  ('project-jobfinix', 'JobFinix', 'jobfinix', 'HR/Tech', 'https://jobfinix.com', true, true, 'Job marketplace.', now(), now()),
+  ('project-gatewav', 'Gatewav', 'gatewav', 'Finance', 'https://gatewav.com', true, true, 'Payment gateway.', now(), now())
 ON CONFLICT ("slug") DO UPDATE SET
   "name" = EXCLUDED."name",
   "industry" = EXCLUDED."industry",
