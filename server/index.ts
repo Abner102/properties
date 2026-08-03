@@ -6,6 +6,7 @@ import path from "path";
 import { config as loadEnv } from "dotenv";
 import apiRoutes from "./routes";
 import { uploadsRoot } from "./lib/paths";
+import { ensureDb } from "./lib/prisma";
 
 loadEnv();
 
@@ -42,8 +43,13 @@ app.get("/uploads/:folder/:filename", (req, res) => {
   return res.sendFile(filePath);
 });
 
-app.get("/health", (_req, res) => {
-  res.json({ status: "ok", port: PORT });
+app.get("/health", async (_req, res) => {
+  try {
+    await ensureDb();
+    res.json({ status: "ok", port: PORT, db: "connected" });
+  } catch {
+    res.status(503).json({ status: "degraded", port: PORT, db: "disconnected" });
+  }
 });
 
 app.use("/api", apiRoutes);
@@ -57,9 +63,18 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
   res.status(500).json({ error: "Internal server error" });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Express API server running on http://localhost:${PORT}`);
   console.log(`Serving uploads from ${uploadsRoot}`);
+  try {
+    await ensureDb();
+    console.log("Database connection ready");
+  } catch (err) {
+    console.warn(
+      "Database not ready yet — will retry on first request:",
+      err instanceof Error ? err.message : err
+    );
+  }
 });
 
 export default app;
