@@ -7,7 +7,7 @@ import {
   ACCESS_TOKEN_NAME,
 } from "./auth";
 import { hasPermission, type Role } from "./constants";
-import prisma from "./prisma";
+import prisma, { withDb } from "./prisma";
 import { omitPassword, withMongoId } from "./serialize";
 
 export async function requireAuth(req: Request, permission?: string) {
@@ -33,7 +33,7 @@ export async function requireAuth(req: Request, permission?: string) {
   }
 
   try {
-    const user = await prisma.user.findUnique({ where: { id: auth.userId } });
+    const user = await withDb((db) => db.user.findUnique({ where: { id: auth.userId } }));
     if (!user || user.suspended) return { error: "Unauthorized", status: 401 as const, user: null };
 
     if (permission && !hasPermission(user.role as Role, permission)) {

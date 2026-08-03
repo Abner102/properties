@@ -6,9 +6,10 @@ import path from "path";
 import { config as loadEnv } from "dotenv";
 import apiRoutes from "./routes";
 import { uploadsRoot } from "./lib/paths";
-import { ensureDb } from "./lib/prisma";
+import { ensureDb, validateDatabaseUrl } from "./lib/prisma";
 
 loadEnv();
+validateDatabaseUrl();
 
 const app = express();
 const PORT = parseInt(process.env.PORT || "3001", 10);
