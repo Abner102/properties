@@ -12,6 +12,7 @@
     "lint": "npm exec -- eslint src"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.112.0",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
     "cookie-parser": "^1.4.7",

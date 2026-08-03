@@ -12,6 +12,7 @@ import {
   getEnvAdminCredentials,
   isEnvAdminAuth,
 } from "../lib/auth";
+import { signInWithSupabase, hasSupabaseAuth } from "../lib/supabase";
 import { logActivity } from "../lib/api-helpers";
 import { omitPassword, withMongoId } from "../lib/serialize";
 
@@ -57,6 +58,18 @@ router.post("/login", async (req, res) => {
     const ip = (req.headers["x-forwarded-for"] as string) || "unknown";
 
     let user: DbUser | null = null;
+    let authenticatedWithSupabase = false;
+
+    if (hasSupabaseAuth()) {
+      const authResult = await signInWithSupabase(email, password);
+      authenticatedWithSupabase = !!authResult?.data?.session;
+      if (!authenticatedWithSupabase) {
+        const result = envAdminLogin(email, password, res);
+        if (result) return res.json(result);
+        return res.status(401).json({ error: authResult?.error?.message || "Invalid email or password" });
+      }
+    }
+
     try {
       user = (await db.user.findUnique({ where: { email } })) as DbUser | null;
     } catch {
@@ -67,7 +80,12 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    const success = user && (await verifyPassword(password, user.password));
+    let success = false;
+    if (authenticatedWithSupabase) {
+      success = !!user;
+    } else {
+      success = !!user && (await verifyPassword(password, user.password));
+    }
 
     try {
       await db.loginAttempt.create({
