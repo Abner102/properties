@@ -11,7 +11,7 @@ A premium, enterprise-grade corporate website and admin dashboard for Endless In
 | Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS 4, Framer Motion |
 | Backend | Next.js API Routes (Node.js) |
 | Database | Supabase PostgreSQL |
-| Auth | JWT + bcrypt password hashing |
+## Auth | Supabase email/password + JWT session cookies
 | Themes | Dark & Light mode (next-themes) |
 | Storage | Cloudinary-ready (configure in `.env`) |
 
@@ -99,6 +99,7 @@ npm run build
 ```
 
 Set `DATABASE_URL` to your Supabase PostgreSQL connection string.
+The backend also uses `SUPABASE_URL` and `SUPABASE_ANON_KEY` for Supabase Auth email/password verification.
 
 ## Contact
 
