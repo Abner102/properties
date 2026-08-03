@@ -6,7 +6,7 @@ INSERT INTO "User" (
 ) VALUES (
   'admin',
   'endlessinfinity16@gmail.com',
-  '$2b$12$fAVPaAoVW.z5Jk3podRFveMGLwpRe5SRpXanJYCOUWxrIWhUItL8u',
+  'Admin@12345',
   'Super Admin',
   'super_admin',
   false,
