@@ -27,13 +27,6 @@ Then run `sql/schema.sql` and `sql/seed.sql` in Supabase or `psql` before starti
 npm run dev         # Start at http://localhost:3000
 ```
 
-## Admin Access
-
-- **URL:** http://localhost:3000/admin/login
-- **Email:** `admin@endlessinfinity.ng`
-- **Password:** Set via `ADMIN_PASSWORD` in `.env` (default: `Admin@12345`)
-
-> Change the admin password immediately in production.
 
 ## Pages
 
