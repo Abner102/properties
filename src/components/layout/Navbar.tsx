@@ -28,21 +28,15 @@ export default function Navbar() {
       )}
     >
       <nav className="max-w-7xl mx-auto px-4 lg:px-6 flex items-center justify-between gap-6">
-        <Link to="/" className="shrink-0 flex items-center gap-2.5">
-          <img
-            src={siteConfig.logo}
-            alt={siteConfig.name}
-            width={48}
-            height={48}
-            className="h-11 w-11 md:h-12 md:w-12 rounded-lg object-cover bg-black ring-1 ring-white/10"
-          />
-          <span
-            className={cn(
-              "font-display text-2xl md:text-[1.7rem] tracking-tight leading-none",
-              overHero ? "text-white" : "text-foreground"
-            )}
-          >
-            E <span className="text-gold">I</span>
+        <Link to="/" className="shrink-0 flex items-center">
+          <span className="flex h-16 w-16 sm:h-[72px] sm:w-[72px] md:h-20 md:w-20 items-center justify-center overflow-hidden rounded-full bg-black/70 p-1.5 shadow-lg ring-1 ring-white/15">
+            <img
+              src={siteConfig.navbarLogo}
+              alt={siteConfig.name}
+              width={1024}
+              height={1024}
+              className="h-full w-full object-contain"
+            />
           </span>
         </Link>
 

@@ -2,6 +2,7 @@ export const siteConfig = {
   name: "Endless Infinity Properties",
   shortName: "Endless Infinity",
   logo: "/images/logo.jpeg",
+  navbarLogo: "/images/logo-transparent.png",
   tagline: "Property. Technology. Enduring wealth.",
   altTagline: "Building the future through real estate, technology, and strategic property investment",
   description:

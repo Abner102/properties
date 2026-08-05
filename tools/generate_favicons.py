@@ -54,6 +54,13 @@ def remove_edge_black_background(image, threshold=40):
     return image
 
 im = remove_edge_black_background(im)
+transparent_logo_path = os.path.join(OUT, 'images', 'logo-transparent.png')
+im.save(transparent_logo_path, format='PNG')
+print('Wrote', transparent_logo_path)
+navbar_logo = im.crop(im.getbbox()) if im.getbbox() else im
+navbar_logo_path = os.path.join(OUT, 'images', 'logo-navbar-transparent.png')
+navbar_logo.save(navbar_logo_path, format='PNG')
+print('Wrote', navbar_logo_path)
 
 def crop_to_content(image):
     bg = Image.new('RGBA', image.size, (255, 255, 255, 0))
