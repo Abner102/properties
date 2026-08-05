@@ -49,6 +49,9 @@ function mapStaticToPublic(): PublicTeamMember[] {
     bio: m.bio,
     image: m.image,
     email: m.email,
+    github: m.github,
+    linkedin: m.linkedin,
+    instagram: m.instagram,
     isFounder: false,
   }));
 
@@ -73,9 +76,24 @@ function mapFounderData(): PublicTeamMember[] {
 function normalizeTeamMembers(apiMembers: PublicTeamMember[]): PublicTeamMember[] {
   const founders = mapFounderData();
   const nonFounders = apiMembers.filter((m) => !m.isFounder);
+  const requiredTeamMembers = staticTeam
+    .filter((m) => ["sanderson-stephen", "william-bosworth", "blessing-matthias"].includes(m.id))
+    .map((m) => ({
+      _id: m.id,
+      name: m.name,
+      position: m.position,
+      bio: m.bio,
+      image: m.image,
+      email: m.email,
+      github: m.github,
+      linkedin: m.linkedin,
+      instagram: m.instagram,
+      isFounder: false,
+    }));
 
   if (nonFounders.length) {
-    return [...founders, ...nonFounders];
+    const existingNames = new Set(nonFounders.map((m) => m.name.toLowerCase()));
+    return [...founders, ...nonFounders, ...requiredTeamMembers.filter((m) => !existingNames.has(m.name.toLowerCase()))];
   }
 
   return mapStaticToPublic();
@@ -227,6 +245,19 @@ export default function TeamContent() {
                               <Mail size={14} />
                               Contact
                             </a>
+                          )}
+                          {(member.github || member.linkedin || member.instagram) && (
+                            <div className="flex justify-center gap-2.5 mt-3">
+                              <SocialLink href={member.github} label={`${member.name} GitHub`}>
+                                <GithubIcon size={16} />
+                              </SocialLink>
+                              <SocialLink href={member.linkedin} label={`${member.name} LinkedIn`}>
+                                <LinkedinIcon size={16} />
+                              </SocialLink>
+                              <SocialLink href={member.instagram} label={`${member.name} Instagram`}>
+                                <InstagramIcon size={16} />
+                              </SocialLink>
+                            </div>
                           )}
                         </div>
                       </GlassCard>

@@ -6,9 +6,9 @@ import { siteConfig } from "@/data/site";
 
 export default function Hero() {
   return (
-    <section className="relative h-screen min-h-[680px] flex items-end sm:items-center overflow-hidden">
+    <section className="relative h-screen min-h-170 flex items-end sm:items-center overflow-hidden">
       <img
-        src="/images/hero.jpg"
+        src="/images/hero-endless-infinity.png"
         alt=""
         className="absolute inset-0 w-full h-full object-cover hero-media"
       />

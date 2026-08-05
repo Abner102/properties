@@ -29,7 +29,7 @@ export default function Navbar() {
     >
       <nav className="max-w-7xl mx-auto px-4 lg:px-6 flex items-center justify-between gap-6">
         <Link to="/" className="shrink-0 flex items-center">
-          <span className="flex h-16 w-16 sm:h-[72px] sm:w-[72px] md:h-20 md:w-20 items-center justify-center overflow-hidden rounded-full bg-black/70 p-1.5 shadow-lg ring-1 ring-white/15">
+          <span className="flex h-16 w-16 sm:h-18 sm:w-18 md:h-20 md:w-20 items-center justify-center overflow-hidden rounded-full bg-black/70 p-1.5 shadow-lg ring-1 ring-white/15">
             <img
               src={siteConfig.navbarLogo}
               alt={siteConfig.name}

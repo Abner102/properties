@@ -5,41 +5,43 @@ export interface TeamMember {
   bio: string;
   image: string;
   email?: string;
+  github?: string;
+  linkedin?: string;
+  instagram?: string;
   isFounder?: boolean;
 }
 
 /** Replace image paths with your photos in /public/team/ (e.g. /team/emmanuel.jpg) */
 export const teamMembers: TeamMember[] = [
   {
-    id: "team-1",
-    name: "Sarah Bello",
-    position: "Real Estate Consultant",
-    bio: "Helps clients find verified properties and guides them through every step of the buying process.",
-    image: "/images/team-3.jpg",
-    email: "endlessinfinity16@gmail.com",
+    id: "sanderson-stephen",
+    name: "Sanderson Stephen",
+    position: "CTO / Assistant Videographer",
+    bio: "Supports technology leadership and assists with video production for Endless Infinity Properties.",
+    image: "/uploads/team/sanderson-stephen.png",
+    email: "Sandersonstephen3@gmail.com",
+    github: "https://github.com/DeanAndie",
+    linkedin: "https://www.linkedin.com/in/sanderson-stephen-67673323b",
+    instagram: "https://www.instagram.com/Ds_anderson7",
   },
   {
-    id: "team-2",
-    name: "Michael Adeyemi",
-    position: "Software Developer",
-    bio: "Builds responsive websites and business applications for clients across Nigeria.",
-    image: "/images/team-4.jpg",
-    email: "endlessinfinity16@gmail.com",
+    id: "william-bosworth",
+    name: "William Bosworth",
+    position: "Marketing & Content / Chief Videographer",
+    bio: "Leads visual storytelling, marketing content, and video production for Endless Infinity Properties.",
+    image: "/uploads/team/william-bosworth.jpeg",
+    email: "williambosworth420@gmail.com",
+    github: "https://github.com/PrimeWill737",
+    linkedin: "https://www.linkedin.com/in/william-bosworth-8514631b2",
+    instagram: "https://www.instagram.com/william_bosworthh",
   },
   {
-    id: "team-3",
-    name: "Grace Pam",
+    id: "blessing-matthias",
+    name: "Blessing Matthias",
     position: "Client Relations",
     bio: "Ensures every client receives timely updates, support, and a smooth experience.",
-    image: "/images/team-5.jpg",
-    email: "endlessinfinity16@gmail.com",
-  },
-  {
-    id: "team-4",
-    name: "Daniel Musa",
-    position: "Marketing & Content",
-    bio: "Creates campaigns and content that connect our brand with investors and property buyers.",
-    image: "/images/team-6.jpg",
-    email: "endlessinfinity16@gmail.com",
+    image: "/uploads/team/blessing-matthias.png",
+    github: "https://github.com/Nachi-bl",
+    instagram: "https://www.instagram.com/bless_nachi",
   },
 ];
