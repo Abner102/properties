@@ -55,6 +55,32 @@ function mapStaticToPublic(): PublicTeamMember[] {
   return [...founderRows, ...teamRows];
 }
 
+function mapFounderData(): PublicTeamMember[] {
+  return staticFounders.map((f) => ({
+    _id: f.id,
+    name: f.name,
+    position: f.role,
+    bio: f.bio,
+    image: f.image,
+    email: f.email,
+    github: f.github,
+    linkedin: f.linkedin,
+    instagram: f.instagram,
+    isFounder: true,
+  }));
+}
+
+function normalizeTeamMembers(apiMembers: PublicTeamMember[]): PublicTeamMember[] {
+  const founders = mapFounderData();
+  const nonFounders = apiMembers.filter((m) => !m.isFounder);
+
+  if (nonFounders.length) {
+    return [...founders, ...nonFounders];
+  }
+
+  return mapStaticToPublic();
+}
+
 function SocialLink({ href, label, children }: { href?: string | null; label: string; children: React.ReactNode }) {
   if (!href) return null;
   return (
@@ -79,7 +105,7 @@ export default function TeamContent() {
       .then((res) => res.json())
       .then((data) => {
         const list = Array.isArray(data.members) ? data.members : [];
-        setMembers(list.length ? list : mapStaticToPublic());
+        setMembers(list.length ? normalizeTeamMembers(list) : mapStaticToPublic());
       })
       .catch(() => setMembers(mapStaticToPublic()))
       .finally(() => setLoading(false));

@@ -96,16 +96,20 @@ ON CONFLICT ("slug") DO UPDATE SET
   "updatedAt" = now();
 
 INSERT INTO "Team" (
-  "id", "name", "position", "bio", "email", "isFounder", "order", "published", "createdAt", "updatedAt"
+  "id", "name", "position", "bio", "image", "email", "github", "linkedin", "instagram", "isFounder", "order", "published", "createdAt", "updatedAt"
 ) VALUES
-  ('team-emmanuel-infinity', 'Emmanuel Infinity', 'Co-Founder & Chief Technology Officer', 'Full-stack software engineer leading technology initiatives at Endless Infinity Properties.', 'endlessinfinity16@gmail.com', true, 1, true, now(), now()),
-  ('team-david-endless', 'David Endless', 'Co-Founder & Chief Executive Officer', 'Software architect and real estate investor building lasting value for clients.', 'endlessinfinity16@gmail.com', true, 2, true, now(), now()),
-  ('team-sarah-bello', 'Sarah Bello', 'Real Estate Consultant', 'Helps clients find verified properties and guides them through every step of the buying process.', 'endlessinfinity16@gmail.com', false, 3, true, now(), now())
+  ('team-emmanuel-infinity', 'Aaron Manzo Kigun', 'Co-Founder & CEO', 'Co-founder and Chief Executive Officer at Endless Infinity Properties, leading the company''s growth across property, cars, websites, and land services.', '/uploads/team/aaron-manzo-kigun.jpeg', 'aaronkigun@gmail.com', 'https://github.com/aaronKigun', 'https://www.linkedin.com/in/aaron-kigun00123', 'https://instagram.com/Leeroyszn001/', true, 1, true, now(), now()),
+  ('team-david-endless', 'Abner Abraham', 'Co-Founder & COO', 'Co-founder and Chief Operating Officer at Endless Infinity Properties, overseeing operations and client delivery across the company''s services.', '/uploads/team/abner-abraham.jpeg', 'abnerabraham25@gmail.com', 'https://github.com/Abner102', 'https://www.linkedin.com/in/abner-abraham-05a061374', 'https://instagram.com/abnerabraham25', true, 2, true, now(), now()),
+  ('team-sarah-bello', 'Sarah Bello', 'Real Estate Consultant', 'Helps clients find verified properties and guides them through every step of the buying process.', '/images/team-3.jpg', 'endlessinfinity16@gmail.com', null, null, null, false, 3, true, now(), now())
 ON CONFLICT ("id") DO UPDATE SET
   "name" = EXCLUDED."name",
   "position" = EXCLUDED."position",
   "bio" = EXCLUDED."bio",
+  "image" = EXCLUDED."image",
   "email" = EXCLUDED."email",
+  "github" = EXCLUDED."github",
+  "linkedin" = EXCLUDED."linkedin",
+  "instagram" = EXCLUDED."instagram",
   "isFounder" = EXCLUDED."isFounder",
   "order" = EXCLUDED."order",
   "published" = EXCLUDED."published",

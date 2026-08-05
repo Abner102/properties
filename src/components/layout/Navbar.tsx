@@ -28,7 +28,14 @@ export default function Navbar() {
       )}
     >
       <nav className="max-w-7xl mx-auto px-4 lg:px-6 flex items-center justify-between gap-6">
-        <Link to="/" className="shrink-0">
+        <Link to="/" className="shrink-0 flex items-center gap-2.5">
+          <img
+            src={siteConfig.logo}
+            alt={siteConfig.name}
+            width={48}
+            height={48}
+            className="h-11 w-11 md:h-12 md:w-12 rounded-lg object-cover bg-black ring-1 ring-white/10"
+          />
           <span
             className={cn(
               "font-display text-2xl md:text-[1.7rem] tracking-tight leading-none",

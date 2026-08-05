@@ -25,8 +25,17 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
           <div className="lg:col-span-5">
-            <Link to="/" className="font-display text-3xl tracking-tight">
-              Endless <span className="text-gold">Infinity</span>
+            <Link to="/" className="inline-flex items-center gap-4">
+              <img
+                src={siteConfig.logo}
+                alt={siteConfig.name}
+                width={72}
+                height={72}
+                className="h-16 w-16 sm:h-[72px] sm:w-[72px] rounded-lg object-cover bg-black ring-1 ring-border"
+              />
+              <span className="font-display text-3xl tracking-tight leading-none">
+                Endless <span className="text-gold">Infinity</span>
+              </span>
             </Link>
             <p className="mt-5 text-muted-foreground text-sm leading-relaxed max-w-sm">
               {siteConfig.altTagline}
