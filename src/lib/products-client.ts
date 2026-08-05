@@ -170,7 +170,7 @@ export function toCar(p: PublicProduct): Car {
     id: p.slug,
     brand: p.brand || "Unknown",
     model: p.model || p.name,
-    year: p.year || new Date().getFullYear(),
+    year: p.year ?? new Date().getFullYear(),
     price: p.price,
     fuel: (p.fuel as Car["fuel"]) || "petrol",
     transmission: (p.transmission as Car["transmission"]) || "automatic",

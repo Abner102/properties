@@ -78,6 +78,47 @@ ON CONFLICT ("slug") DO UPDATE SET
   "description" = EXCLUDED."description",
   "updatedAt" = now();
 
+DELETE FROM "Product"
+WHERE "category" IN ('cars', 'luxury-assets')
+  AND "slug" NOT IN (
+    'toyota-corolla-2017-white',
+    'toyota-camry-2015-red',
+    'mercedes-benz-gle-400-white',
+    'mercedes-benz-ml-350-blue',
+    'lexus-nx200t-black'
+  );
+
+INSERT INTO "Product" (
+  "id", "name", "productCode", "slug", "category", "price", "city", "state", "bedrooms", "bathrooms",
+  "propertyType", "status", "featured", "amenities", "coverImage", "images", "description",
+  "brand", "model", "year", "fuel", "transmission", "createdAt", "updatedAt"
+) VALUES
+  ('product-toyota-corolla-2017-white', 'Toyota Corolla 2017', 'EIP-CAR-COROLLA-2017', 'toyota-corolla-2017-white', 'cars', 23000000, 'Jos', 'Plateau', 0, 0, 'car', 'published', true, '["Color: White", "Body: Sedan", "Views: Front, side, rear", "Mileage: Available on request"]', '/uploads/cars/toyota-corolla-2017-front.jpeg', '["/uploads/cars/toyota-corolla-2017-front.jpeg", "/uploads/cars/toyota-corolla-2017-side.jpeg", "/uploads/cars/toyota-corolla-2017-back.jpeg"]', 'White 2017 Toyota Corolla with front, side, and rear views available.', 'Toyota', 'Corolla', 2017, 'petrol', 'automatic', now(), now()),
+  ('product-toyota-camry-2015-red', 'Toyota Camry 2015', 'EIP-CAR-CAMRY-2015', 'toyota-camry-2015-red', 'cars', 19000000, 'Jos', 'Plateau', 0, 0, 'car', 'published', true, '["Color: Red", "Body: Sedan", "Views: Front, side, rear", "Mileage: Available on request"]', '/uploads/cars/toyota-camry-2015-front.jpeg', '["/uploads/cars/toyota-camry-2015-front.jpeg", "/uploads/cars/toyota-camry-2015-side.jpeg", "/uploads/cars/toyota-camry-2015-back.jpeg"]', 'Red 2015 Toyota Camry with front, side, and rear views available.', 'Toyota', 'Camry', 2015, 'petrol', 'automatic', now(), now()),
+  ('product-mercedes-benz-gle-400-white', 'Mercedes-Benz GLE 400', 'EIP-LUX-GLE-400', 'mercedes-benz-gle-400-white', 'luxury-assets', 35000000, 'Jos', 'Plateau', 0, 0, 'car', 'published', true, '["Color: White", "Body: SUV", "Drivetrain: 4MATIC", "Mileage: Available on request"]', '/uploads/cars/mercedes-gle-400-white-front.jpeg', '["/uploads/cars/mercedes-gle-400-white-front.jpeg", "/uploads/cars/mercedes-gle-400-white-side.jpeg", "/uploads/cars/mercedes-gle-400-white-back.jpeg"]', 'White Mercedes-Benz GLE 400 with front, side, and rear views available.', 'Mercedes-Benz', 'GLE 400', 0, 'petrol', 'automatic', now(), now()),
+  ('product-mercedes-benz-ml-350-blue', 'Mercedes-Benz ML 350', 'EIP-LUX-ML-350', 'mercedes-benz-ml-350-blue', 'luxury-assets', 33000000, 'Jos', 'Plateau', 0, 0, 'car', 'published', false, '["Color: Navy / Dark Blue", "Body: SUV", "Drivetrain: 4MATIC", "Mileage: Available on request"]', '/uploads/cars/mercedes-ml-350-blue-front.jpeg', '["/uploads/cars/mercedes-ml-350-blue-front.jpeg", "/uploads/cars/mercedes-ml-350-blue-side.jpeg", "/uploads/cars/mercedes-ml-350-blue-back.jpeg"]', 'Navy blue Mercedes-Benz ML 350 with front, side, and rear views available.', 'Mercedes-Benz', 'ML 350', 0, 'petrol', 'automatic', now(), now()),
+  ('product-lexus-nx200t-black', 'Lexus NX200t', 'EIP-LUX-NX200T', 'lexus-nx200t-black', 'luxury-assets', 38000000, 'Jos', 'Plateau', 0, 0, 'car', 'published', false, '["Color: Black", "Body: SUV", "Views: Front, side, rear", "Mileage: Available on request"]', '/uploads/cars/lexus-nx200t-black-front.jpeg', '["/uploads/cars/lexus-nx200t-black-front.jpeg", "/uploads/cars/lexus-nx200t-black-side.jpeg", "/uploads/cars/lexus-nx200t-black-back.jpeg"]', 'Black Lexus NX200t with front, side, and rear views available.', 'Lexus', 'NX200t', 0, 'petrol', 'automatic', now(), now())
+ON CONFLICT ("slug") DO UPDATE SET
+  "name" = EXCLUDED."name",
+  "productCode" = EXCLUDED."productCode",
+  "category" = EXCLUDED."category",
+  "price" = EXCLUDED."price",
+  "city" = EXCLUDED."city",
+  "state" = EXCLUDED."state",
+  "propertyType" = EXCLUDED."propertyType",
+  "status" = EXCLUDED."status",
+  "featured" = EXCLUDED."featured",
+  "amenities" = EXCLUDED."amenities",
+  "coverImage" = EXCLUDED."coverImage",
+  "images" = EXCLUDED."images",
+  "description" = EXCLUDED."description",
+  "brand" = EXCLUDED."brand",
+  "model" = EXCLUDED."model",
+  "year" = EXCLUDED."year",
+  "fuel" = EXCLUDED."fuel",
+  "transmission" = EXCLUDED."transmission",
+  "updatedAt" = now();
+
 INSERT INTO "SoftwareProject" (
   "id", "name", "slug", "industry", "liveUrl", "featured", "published", "description", "createdAt", "updatedAt"
 ) VALUES

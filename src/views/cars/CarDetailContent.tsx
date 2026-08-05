@@ -11,6 +11,7 @@ import FadeIn from "@/components/ui/FadeIn";
 
 export default function CarDetailContent({ car }: { car: Car }) {
   const [activeImage, setActiveImage] = useState(0);
+  const priceLabel = car.price > 0 ? formatPrice(car.price) : "Contact for price";
 
   return (
     <>
@@ -23,17 +24,28 @@ export default function CarDetailContent({ car }: { car: Car }) {
 
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-10">
           <FadeIn>
-            <div className="relative aspect-[16/10] rounded-2xl overflow-hidden">
-              <AppImage src={car.images[activeImage]} alt={`${car.brand} ${car.model}`} fill className="object-cover" sizes="50vw" />
+            <div className="relative h-[62vh] min-h-80 max-h-[720px] rounded-2xl overflow-hidden bg-black/90">
+              <AppImage
+                src={car.images[activeImage]}
+                alt={`${car.brand} ${car.model}`}
+                fill
+                className="object-contain p-2 sm:p-3"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
               {car.luxury && (
                 <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-gold text-background text-xs font-semibold">Luxury</span>
               )}
             </div>
             {car.images.length > 1 && (
-              <div className="flex gap-3 mt-4">
+              <div className="flex gap-3 mt-4 overflow-x-auto pb-2">
                 {car.images.map((img, i) => (
-                  <button key={i} onClick={() => setActiveImage(i)} className={`relative w-20 h-14 rounded-lg overflow-hidden border-2 ${i === activeImage ? "border-gold" : "border-transparent"}`}>
-                    <AppImage src={img} alt="" fill className="object-cover" />
+                  <button
+                    key={i}
+                    onClick={() => setActiveImage(i)}
+                    className={`relative h-20 w-24 shrink-0 rounded-lg overflow-hidden border-2 bg-black/90 ${i === activeImage ? "border-gold" : "border-transparent"}`}
+                    aria-label={`Show ${car.brand} ${car.model} view ${i + 1}`}
+                  >
+                    <AppImage src={img} alt="" fill className="object-contain p-1" />
                   </button>
                 ))}
               </div>
@@ -43,11 +55,11 @@ export default function CarDetailContent({ car }: { car: Car }) {
           <FadeIn delay={0.1}>
             <p className="text-muted-foreground">{car.brand}</p>
             <h1 className="font-display text-3xl md:text-4xl font-bold">{car.model}</h1>
-            <p className="text-3xl font-bold text-gold mt-4">{formatPrice(car.price)}</p>
+            <p className="text-3xl font-bold text-gold mt-4">{priceLabel}</p>
             <div className="flex gap-6 mt-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-2 capitalize"><Fuel size={16} className="text-gold" /> {car.fuel}</span>
               <span className="flex items-center gap-2 capitalize"><Settings2 size={16} className="text-gold" /> {car.transmission}</span>
-              <span>{car.year}</span>
+              {car.year > 0 && <span>{car.year}</span>}
             </div>
             <p className="text-muted-foreground leading-relaxed mt-6">{car.description}</p>
 
