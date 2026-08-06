@@ -38,7 +38,7 @@ export default function PortfolioContent() {
                     <ProjectCover
                       src={project.image}
                       alt={project.name}
-                      className="group-hover:scale-105 transition-transform duration-500"
+                      className="object-contain group-hover:scale-105 transition-transform duration-500"
                       sizes="33vw"
                     />
                     {project.featured && (

@@ -27,7 +27,7 @@ export const founders: Founder[] = [
     linkedin: "https://www.linkedin.com/in/aaron-kigun00123",
     instagram: "https://instagram.com/Leeroyszn001/",
     email: "aaronkigun@gmail.com",
-    softwareExperience: "Built 50+ web and mobile applications including Nexora SMS, JosCity, and JobFinix.",
+    softwareExperience: "Built web and mobile applications including Nexora SMS and JosCity.",
     realEstateExperience: "Managed 100+ property transactions across Lagos, Abuja, and Jos.",
   },
   {
