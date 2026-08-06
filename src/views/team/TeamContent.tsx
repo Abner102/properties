@@ -92,8 +92,9 @@ function normalizeTeamMembers(apiMembers: PublicTeamMember[]): PublicTeamMember[
     }));
 
   if (nonFounders.length) {
-    const existingNames = new Set(nonFounders.map((m) => m.name.toLowerCase()));
-    return [...founders, ...nonFounders, ...requiredTeamMembers.filter((m) => !existingNames.has(m.name.toLowerCase()))];
+    const requiredNames = new Set(requiredTeamMembers.map((m) => m.name.toLowerCase()));
+    const otherMembers = nonFounders.filter((m) => !requiredNames.has(m.name.toLowerCase()));
+    return [...founders, ...requiredTeamMembers, ...otherMembers];
   }
 
   return mapStaticToPublic();

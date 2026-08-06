@@ -5,7 +5,6 @@ import Hero from "@/components/home/Hero";
 import Stats from "@/components/home/Stats";
 import FeaturedProperties from "@/components/home/FeaturedProperties";
 import FeaturedProjects from "@/components/home/FeaturedProjects";
-import Testimonials from "@/components/home/Testimonials";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import Newsletter from "@/components/home/Newsletter";
 import CTASection from "@/components/home/CTASection";
@@ -13,21 +12,15 @@ import AppImage from "@/components/ui/AppImage";
 import FadeIn from "@/components/ui/FadeIn";
 import { formatPrice } from "@/lib/utils";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { getProductsByCategories, toCar, toLandListing } from "@/lib/products-client";
+import { getProductsByCategories, toCar } from "@/lib/products-client";
 import type { Car } from "@/data/cars";
-import type { LandListing } from "@/lib/products-client";
 
 export default function HomePage() {
   const [featuredCars, setFeaturedCars] = useState<Car[]>([]);
-  const [landListings, setLandListings] = useState<LandListing[]>([]);
 
   useEffect(() => {
-    Promise.all([
-      getProductsByCategories(["cars", "luxury-assets"], { featured: true, limit: 3 }),
-      getProductsByCategories(["lands"], { limit: 2 }),
-    ]).then(([cars, lands]) => {
+    getProductsByCategories(["cars", "luxury-assets"], { featured: true, limit: 3 }).then((cars) => {
       setFeaturedCars(cars.map(toCar));
-      setLandListings(lands.map(toLandListing));
     });
   }, []);
 
@@ -78,31 +71,18 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <SectionHeading
             subtitle="Land"
-            title="Latest Land Listings"
-            description="Verified titles and prime locations for development and investment."
+            title="Land Listings"
+            description="Will be added shortly."
           />
-          <div className="grid md:grid-cols-2 gap-8">
-            {landListings.map((land, i) => (
-              <FadeIn key={land.id} delay={i * 0.1}>
-                <Link to="/land" className="group grid sm:grid-cols-2 gap-0 overflow-hidden bg-card border border-border">
-                  <div className="relative aspect-[4/3] sm:aspect-auto sm:min-h-[220px]">
-                    <AppImage src={land.image} alt={land.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="300px" />
-                  </div>
-                  <div className="p-6 md:p-8 flex flex-col justify-center">
-                    <span className="text-[11px] tracking-[0.2em] uppercase text-gold font-semibold">{land.category}</span>
-                    <h3 className="font-display text-2xl md:text-3xl mt-2 group-hover:text-gold transition-colors">{land.title}</h3>
-                    <p className="text-sm text-muted-foreground mt-2">{land.state}</p>
-                    <p className="text-gold font-semibold text-lg mt-4">{formatPrice(land.price)}</p>
-                  </div>
-                </Link>
-              </FadeIn>
-            ))}
-          </div>
+          <FadeIn>
+            <div className="border border-border bg-card/80 px-6 py-12 text-center">
+              <p className="font-display text-2xl font-bold">Will be added shortly.</p>
+            </div>
+          </FadeIn>
         </div>
       </section>
 
       <FeaturedProjects />
-      <Testimonials />
       <WhyChooseUs />
       <Newsletter />
       <CTASection />

@@ -59,8 +59,10 @@ ON CONFLICT ("slug") DO UPDATE SET
 INSERT INTO "Product" (
   "id", "name", "productCode", "slug", "category", "price", "city", "state", "bedrooms", "bathrooms", "status", "featured", "amenities", "coverImage", "description", "createdAt", "updatedAt"
 ) VALUES
-  ('product-lekki-penthouse', 'Lekki Phase 1 Luxury Penthouse', 'EIP-APP-BASE', 'lekki-penthouse', 'apartments', 450000000, 'Lagos', 'Lagos', 4, 5, 'published', true, '["Swimming Pool", "Gym", "24/7 Security", "Smart Home"]', '/images/property-1.jpg', 'Stunning penthouse with panoramic lagoon views.', now(), now()),
-  ('product-ikeja-gra-land', 'Ikeja GRA Development Land', 'EIP-LAN-BASE', 'ikeja-gra-land', 'lands', 95000000, 'Lagos', 'Lagos', 0, 0, 'published', true, '[]', '/images/land-1.jpg', 'Prime land with C of O in Ikeja GRA.', now(), now()),
+  ('product-lekki-penthouse', 'Luxurious Property for Sale', 'EIP-PROP-ATIKU-STREET', 'lekki-penthouse', 'houses', 450000000, 'Jos', 'Plateau', 4, 0, 'published', true, '["All rooms ensuite", "2 floors", "4 bedrooms", "3 parlours", "3 balconies", "Two single-room BQ units with two toilets", "Security house", "Standing on one plot of land", "Land title: R of O"]', '/uploads/properties/luxurious-property-atiku-street.jpeg', 'Luxurious property for sale just beside Atiku''s house on Atiku Street. All rooms are ensuite, with 2 floors, 4 bedrooms, 3 parlours, 3 balconies, two single-room BQ units with two toilets, and a security house. Standing on one plot of land with R of O title.', now(), now()),
+  ('product-abuja-villa', 'Sharp 4-Bedroom Ensuite Duplex', 'EIP-PROP-RAYFIELD-DUPLEX', 'abuja-villa', 'houses', 400000000, 'Jos', 'Plateau', 4, 0, 'published', true, '["All rooms ensuite", "2 living rooms", "2 balconies", "Backup solar power system", "Kitchen", "Sit-out/lounge", "Dining area", "Store", "Functional borehole", "Exquisite landscaping", "Space for multiple cars", "Land size: 2 plots", "Land title: C of O", "LGA: Jos South"]', '/uploads/properties/rayfield-golf-club-duplex.jpeg', 'For sale: sharp 4-bedroom all ensuite duplex around Rayfield Golf Club axis, Jos South LGA, Jos. It has 2 living rooms, 2 balconies, backup solar power system, kitchen, sit-out/lounge, dining area, store, functional borehole, exquisite landscaping, and space for multiple cars. Land size is 2 plots with C of O title.', now(), now()),
+  ('product-vi-apartment', '4-Bedroom Fully Detached Duplex', 'EIP-PROP-GURA-TOPP-DUPLEX', 'vi-apartment', 'houses', 500000000, 'Jos', 'Plateau', 4, 0, 'published', true, '["CCTV cameras", "Interior fittings", "Borehole", "JED and NESCO electricity supply", "Remote-control gate", "BQ and gate house", "Solid stamp floor", "Good water supply", "All bedrooms ensuite", "Built on two plots of land", "Title: C of O", "Ground rent up to date", "Electric fence", "Water view", "Swimming pool spot available", "Fully furnished kitchen", "All interior fittings and furniture included", "Slightly negotiable"]', '/uploads/properties/gura-topp-rayfield-detached-duplex.jpeg', 'A 4-bedroom fully detached duplex for sale at Gura Topp, Rayfield Extension, with all interior fittings and furniture. Built on two plots of land with C of O title, ground rent up to date, water view, available spot for a swimming pool, and a fully furnished kitchen. Price is N500 million, slightly negotiable.', now(), now()),
+  ('product-ikeja-gra-land', '4-Bedroom Flat Duplex', 'EIP-PROP-ELIM-RAYFIELD-DUPLEX', 'ikeja-gra-land', 'houses', 350000000, 'Jos', 'Plateau', 4, 0, 'published', true, '["4-bedroom flat duplex", "Built on 2 plots of land", "Title: C of O", "Located behind Elim", "Area 1 Junction, Rayfield"]', '/uploads/properties/behind-elim-area-1-rayfield-duplex.jpeg', 'A 4-bedroom flat duplex for sale behind Elim, Area 1 Junction, Rayfield, Jos. Built on 2 plots of land with C of O title.', now(), now()),
   ('product-mercedes-s-class', 'Mercedes-Benz S-Class 2024', 'EIP-CAR-BASE', 'mercedes-s-class', 'cars', 85000000, null, null, 0, 0, 'published', true, '[]', '/images/car-mercedes.jpg', 'Brand new Mercedes-Benz S-Class with full options.', now(), now())
 ON CONFLICT ("slug") DO UPDATE SET
   "name" = EXCLUDED."name",
@@ -77,6 +79,113 @@ ON CONFLICT ("slug") DO UPDATE SET
   "coverImage" = EXCLUDED."coverImage",
   "description" = EXCLUDED."description",
   "updatedAt" = now();
+
+UPDATE "Product"
+SET
+  "name" = 'Luxurious Property for Sale',
+  "productCode" = 'EIP-PROP-ATIKU-STREET',
+  "category" = 'houses',
+  "propertyType" = 'villa',
+  "price" = 450000000,
+  "city" = 'Jos',
+  "state" = 'Plateau',
+  "address" = 'Just beside Atiku''s house on Atiku Street',
+  "bedrooms" = 4,
+  "bathrooms" = 0,
+  "squareMeter" = 0,
+  "status" = 'published',
+  "featured" = true,
+  "amenities" = '["All rooms ensuite", "2 floors", "4 bedrooms", "3 parlours", "3 balconies", "Two single-room BQ units with two toilets", "Security house", "Standing on one plot of land", "Land title: R of O"]',
+  "coverImage" = '/uploads/properties/luxurious-property-atiku-street.jpeg',
+  "images" = '["/uploads/properties/luxurious-property-atiku-street.jpeg"]',
+  "description" = 'Luxurious property for sale just beside Atiku''s house on Atiku Street. All rooms are ensuite, with 2 floors, 4 bedrooms, 3 parlours, 3 balconies, two single-room BQ units with two toilets, and a security house. Standing on one plot of land with R of O title.',
+  "investmentScore" = 0,
+  "nearbySchools" = '[{"name":"Atiku''s house","type":"Landmark","distance":"Beside property"}]',
+  "lat" = 9.8965,
+  "lng" = 8.8583,
+  "updatedAt" = now()
+WHERE "slug" = 'lekki-penthouse';
+
+UPDATE "Product"
+SET
+  "name" = 'Sharp 4-Bedroom Ensuite Duplex',
+  "productCode" = 'EIP-PROP-RAYFIELD-DUPLEX',
+  "category" = 'houses',
+  "propertyType" = 'villa',
+  "price" = 400000000,
+  "city" = 'Jos',
+  "state" = 'Plateau',
+  "address" = 'Rayfield Golf Club axis, Jos South LGA',
+  "bedrooms" = 4,
+  "bathrooms" = 0,
+  "squareMeter" = 0,
+  "status" = 'published',
+  "featured" = true,
+  "amenities" = '["All rooms ensuite", "2 living rooms", "2 balconies", "Backup solar power system", "Kitchen", "Sit-out/lounge", "Dining area", "Store", "Functional borehole", "Exquisite landscaping", "Space for multiple cars", "Land size: 2 plots", "Land title: C of O", "LGA: Jos South"]',
+  "coverImage" = '/uploads/properties/rayfield-golf-club-duplex.jpeg',
+  "images" = '["/uploads/properties/rayfield-golf-club-duplex.jpeg"]',
+  "description" = 'For sale: sharp 4-bedroom all ensuite duplex around Rayfield Golf Club axis, Jos South LGA, Jos. It has 2 living rooms, 2 balconies, backup solar power system, kitchen, sit-out/lounge, dining area, store, functional borehole, exquisite landscaping, and space for multiple cars. Land size is 2 plots with C of O title.',
+  "investmentScore" = 0,
+  "nearbySchools" = '[{"name":"Rayfield Golf Club","type":"Landmark","distance":"Axis"}]',
+  "lat" = 9.8708,
+  "lng" = 8.8829,
+  "updatedAt" = now()
+WHERE "slug" = 'abuja-villa';
+
+UPDATE "Product"
+SET
+  "name" = '4-Bedroom Flat Duplex',
+  "productCode" = 'EIP-PROP-ELIM-RAYFIELD-DUPLEX',
+  "category" = 'houses',
+  "propertyType" = 'villa',
+  "price" = 350000000,
+  "city" = 'Jos',
+  "state" = 'Plateau',
+  "address" = 'Behind Elim, Area 1 Junction, Rayfield',
+  "bedrooms" = 4,
+  "bathrooms" = 0,
+  "squareMeter" = 0,
+  "status" = 'published',
+  "featured" = true,
+  "amenities" = '["4-bedroom flat duplex", "Built on 2 plots of land", "Title: C of O", "Located behind Elim", "Area 1 Junction, Rayfield"]',
+  "coverImage" = '/uploads/properties/behind-elim-area-1-rayfield-duplex.jpeg',
+  "images" = '["/uploads/properties/behind-elim-area-1-rayfield-duplex.jpeg"]',
+  "description" = 'A 4-bedroom flat duplex for sale behind Elim, Area 1 Junction, Rayfield, Jos. Built on 2 plots of land with C of O title.',
+  "investmentScore" = 0,
+  "nearbySchools" = '[{"name":"Elim","type":"Landmark","distance":"Behind property"},{"name":"Area 1 Junction","type":"Landmark","distance":"Rayfield"}]',
+  "lat" = 9.8702,
+  "lng" = 8.8815,
+  "updatedAt" = now()
+WHERE "slug" = 'ikeja-gra-land';
+
+UPDATE "Product"
+SET
+  "name" = '4-Bedroom Fully Detached Duplex',
+  "productCode" = 'EIP-PROP-GURA-TOPP-DUPLEX',
+  "category" = 'houses',
+  "propertyType" = 'villa',
+  "price" = 500000000,
+  "city" = 'Jos',
+  "state" = 'Plateau',
+  "address" = 'Gura Topp, Rayfield Extension',
+  "bedrooms" = 4,
+  "bathrooms" = 0,
+  "squareMeter" = 0,
+  "status" = 'published',
+  "featured" = true,
+  "amenities" = '["CCTV cameras", "Interior fittings", "Borehole", "JED and NESCO electricity supply", "Remote-control gate", "BQ and gate house", "Solid stamp floor", "Good water supply", "All bedrooms ensuite", "Built on two plots of land", "Title: C of O", "Ground rent up to date", "Electric fence", "Water view", "Swimming pool spot available", "Fully furnished kitchen", "All interior fittings and furniture included", "Slightly negotiable"]',
+  "coverImage" = '/uploads/properties/gura-topp-rayfield-detached-duplex.jpeg',
+  "images" = '["/uploads/properties/gura-topp-rayfield-detached-duplex.jpeg"]',
+  "description" = 'A 4-bedroom fully detached duplex for sale at Gura Topp, Rayfield Extension, with all interior fittings and furniture. Built on two plots of land with C of O title, ground rent up to date, water view, available spot for a swimming pool, and a fully furnished kitchen. Price is N500 million, slightly negotiable.',
+  "investmentScore" = 0,
+  "nearbySchools" = '[{"name":"Rayfield Extension","type":"Area","distance":"Gura Topp"}]',
+  "lat" = 9.8697,
+  "lng" = 8.8799,
+  "updatedAt" = now()
+WHERE "slug" = 'vi-apartment';
+
+DELETE FROM "Product"
+WHERE "slug" IN ('banana-island', 'port-harcourt-commercial');
 
 DELETE FROM "Product"
 WHERE "category" IN ('cars', 'luxury-assets')
@@ -222,7 +331,7 @@ INSERT INTO "Team" (
   ('team-david-endless', 'Abner Abraham', 'Co-Founder & COO', 'Co-founder and Chief Operating Officer at Endless Infinity Properties, overseeing operations and client delivery across the company''s services.', '/uploads/team/abner-abraham.jpeg', 'abnerabraham25@gmail.com', 'https://github.com/Abner102', 'https://www.linkedin.com/in/abner-abraham-05a061374', 'https://instagram.com/abnerabraham25', true, 2, true, now(), now()),
   ('team-sanderson-stephen', 'Sanderson Stephen', 'CTO / Assistant Videographer', 'Supports technology leadership and assists with video production for Endless Infinity Properties.', '/uploads/team/sanderson-stephen.png', 'Sandersonstephen3@gmail.com', 'https://github.com/DeanAndie', 'https://www.linkedin.com/in/sanderson-stephen-67673323b', 'https://www.instagram.com/Ds_anderson7', false, 3, true, now(), now()),
   ('team-william-bosworth', 'William Bosworth', 'Marketing & Content / Chief Videographer', 'Leads visual storytelling, marketing content, and video production for Endless Infinity Properties.', '/uploads/team/william-bosworth.jpeg', 'williambosworth420@gmail.com', 'https://github.com/PrimeWill737', 'https://www.linkedin.com/in/william-bosworth-8514631b2', 'https://www.instagram.com/william_bosworthh', false, 4, true, now(), now()),
-  ('team-blessing-matthias', 'Blessing Matthias', 'Client Relations', 'Ensures every client receives timely updates, support, and a smooth experience.', '/uploads/team/blessing-matthias.png', null, 'https://github.com/Nachi-bl', null, 'https://www.instagram.com/bless_nachi', false, 5, true, now(), now())
+  ('team-blessing-matthias', 'Blessing Matthias', 'Client Relations', 'Ensures every client receives timely updates, support, and a smooth experience.', '/uploads/team/blessing-matthias.png', 'blessnach@gmail.com', 'https://github.com/Nachi-bl', 'https://www.linkedin.com/in/blessing-matthias-283786373', 'https://www.instagram.com/bless_nachi', false, 5, true, now(), now())
 ON CONFLICT ("id") DO UPDATE SET
   "name" = EXCLUDED."name",
   "position" = EXCLUDED."position",

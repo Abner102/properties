@@ -50,10 +50,10 @@ export default function Navbar() {
                 cn(
                   "px-2.5 xl:px-3 py-2 text-[12px] xl:text-[13px] font-medium tracking-wide uppercase transition-colors",
                   isActive
-                    ? "text-gold"
+                    ? "text-gold-dark dark:text-gold"
                     : overHero
-                      ? "text-white/80 hover:text-white"
-                      : "text-foreground/70 hover:text-foreground"
+                      ? "text-foreground/90 hover:text-foreground dark:text-white/85 dark:hover:text-white"
+                      : "text-foreground/85 hover:text-foreground"
                 )
               }
             >
@@ -67,7 +67,7 @@ export default function Navbar() {
             href={`tel:${siteConfig.phone}`}
             className={cn(
               "p-2 transition-colors hover:text-gold",
-              overHero ? "text-white/85" : "text-foreground/75"
+              overHero ? "text-foreground/85 dark:text-white/85" : "text-foreground/80"
             )}
             aria-label="Call Us"
           >

@@ -2,6 +2,8 @@ import { properties as staticProperties, type Property } from "@/data/properties
 import { cars as staticCars, type Car } from "@/data/cars";
 import { fetchProducts, fetchProductBySlug } from "@/lib/api";
 
+const DEMO_PROPERTY_SLUGS = new Set(["banana-island", "port-harcourt-commercial"]);
+
 export interface PublicProduct {
   id: string;
   title: string;
@@ -42,7 +44,7 @@ function mapStaticProperty(p: (typeof staticProperties)[0]): PublicProduct {
     city: p.city,
     price: p.price,
     type: p.type,
-    category: p.type === "land" ? "lands" : p.type,
+    category: p.type === "land" ? "lands" : p.type === "villa" || p.type === "penthouse" ? "houses" : p.type,
     bedrooms: p.bedrooms,
     bathrooms: p.bathrooms,
     area: p.area,
@@ -54,6 +56,20 @@ function mapStaticProperty(p: (typeof staticProperties)[0]): PublicProduct {
     lat: p.lat,
     lng: p.lng,
     nearby: p.nearby,
+  };
+}
+
+function matchesCategories(product: PublicProduct, categories: string[]): boolean {
+  return categories.includes(product.category) || categories.includes(product.type);
+}
+
+function mergeStaticProperty(product: PublicProduct): PublicProduct {
+  const staticProperty = staticProperties.find((p) => p.id === product.slug);
+  if (!staticProperty) return product;
+
+  return {
+    ...product,
+    ...mapStaticProperty(staticProperty),
   };
 }
 
@@ -97,13 +113,31 @@ function staticFallback(categories: string[], options?: { featured?: boolean; li
   return items.slice(0, options?.limit);
 }
 
+function mergeWithStaticProducts(
+  products: PublicProduct[],
+  categories: string[],
+  options?: { featured?: boolean; limit?: number }
+): PublicProduct[] {
+  const merged = products
+    .filter((product) => !DEMO_PROPERTY_SLUGS.has(product.slug))
+    .map(mergeStaticProperty);
+  const existingSlugs = new Set(merged.map((product) => product.slug));
+  const staticItems = staticProperties
+    .map(mapStaticProperty)
+    .filter((product) => matchesCategories(product, categories))
+    .filter((product) => !options?.featured || product.featured)
+    .filter((product) => !existingSlugs.has(product.slug));
+
+  return [...merged, ...staticItems].slice(0, options?.limit);
+}
+
 export async function getProductsByCategories(
   categories: string[],
   options?: { featured?: boolean; limit?: number }
 ): Promise<PublicProduct[]> {
   try {
     const products = await fetchProducts({ categories, featured: options?.featured, limit: options?.limit });
-    if (products.length > 0) return products;
+    if (products.length > 0) return mergeWithStaticProducts(products, categories, options);
   } catch {
     // fall through
   }
@@ -113,7 +147,7 @@ export async function getProductsByCategories(
 export async function getProductBySlug(slug: string): Promise<PublicProduct | null> {
   try {
     const product = await fetchProductBySlug(slug);
-    if (product) return product;
+    if (product) return mergeStaticProperty(product);
   } catch {
     // fall through
   }

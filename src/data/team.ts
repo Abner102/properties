@@ -41,7 +41,9 @@ export const teamMembers: TeamMember[] = [
     position: "Client Relations",
     bio: "Ensures every client receives timely updates, support, and a smooth experience.",
     image: "/uploads/team/blessing-matthias.png",
+    email: "blessnach@gmail.com",
     github: "https://github.com/Nachi-bl",
+    linkedin: "https://www.linkedin.com/in/blessing-matthias-283786373",
     instagram: "https://www.instagram.com/bless_nachi",
   },
 ];

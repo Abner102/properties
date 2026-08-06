@@ -2,6 +2,8 @@ import db from "./db";
 import { properties as staticProperties, type Property } from "../../src/data/properties";
 import { cars as staticCars, type Car } from "../../src/data/cars";
 
+const DEMO_PROPERTY_SLUGS = new Set(["banana-island", "port-harcourt-commercial"]);
+
 export interface PublicProduct {
   id: string;
   title: string;
@@ -110,6 +112,38 @@ function mapStaticProperty(p: (typeof staticProperties)[0]): PublicProduct {
   };
 }
 
+function mergeStaticProperty(product: PublicProduct): PublicProduct {
+  const staticProperty = staticProperties.find((p) => p.id === product.slug);
+  if (!staticProperty) return product;
+
+  return {
+    ...product,
+    ...mapStaticProperty(staticProperty),
+  };
+}
+
+function matchesCategories(product: PublicProduct, categories: string[]): boolean {
+  return categories.includes(product.category) || categories.includes(product.type);
+}
+
+function mergeWithStaticProducts(
+  products: PublicProduct[],
+  categories: string[],
+  options?: { featured?: boolean; limit?: number }
+): PublicProduct[] {
+  const merged = products
+    .filter((product) => !DEMO_PROPERTY_SLUGS.has(product.slug))
+    .map(mergeStaticProperty);
+  const existingSlugs = new Set(merged.map((product) => product.slug));
+  const staticItems = staticProperties
+    .map(mapStaticProperty)
+    .filter((product) => matchesCategories(product, categories))
+    .filter((product) => !options?.featured || product.featured)
+    .filter((product) => !existingSlugs.has(product.slug));
+
+  return [...merged, ...staticItems].slice(0, options?.limit);
+}
+
 function mapStaticCar(c: (typeof staticCars)[0]): PublicProduct {
   return {
     id: c.id,
@@ -153,7 +187,7 @@ export async function getProductsByCategories(
     });
 
     if (products.length > 0) {
-      return products.map(mapDbProduct);
+      return mergeWithStaticProducts(products.map(mapDbProduct), categories, options);
     }
   } catch {
     // fall through to static
@@ -182,7 +216,7 @@ export async function getProductsByCategories(
 export async function getProductBySlug(slug: string): Promise<PublicProduct | null> {
   try {
     const product = await db.product.findUnique({ where: { slug } });
-    if (product) return mapDbProduct(product);
+    if (product) return mergeStaticProperty(mapDbProduct(product));
   } catch {
     // fall through
   }

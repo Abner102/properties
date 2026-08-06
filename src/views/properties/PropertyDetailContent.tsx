@@ -47,7 +47,9 @@ export default function PropertyDetailContent({ property }: { property: Property
             <div className="flex gap-6 mt-4 text-sm">
               {property.bedrooms > 0 && <span className="flex items-center gap-2"><Bed size={16} className="text-gold" /> {property.bedrooms} Beds</span>}
               {property.bathrooms > 0 && <span className="flex items-center gap-2"><Bath size={16} className="text-gold" /> {property.bathrooms} Baths</span>}
-              <span className="flex items-center gap-2"><Maximize size={16} className="text-gold" /> {property.area} sqm</span>
+              {property.area > 0 && (
+                <span className="flex items-center gap-2"><Maximize size={16} className="text-gold" /> {property.area} sqm</span>
+              )}
             </div>
             <p className="text-muted-foreground leading-relaxed mt-6">{property.description}</p>
 

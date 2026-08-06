@@ -3,6 +3,27 @@ import { ArrowLeft, Clock } from "lucide-react";
 import AppImage from "@/components/ui/AppImage";
 import { blogPosts } from "@/data/blog";
 
+function renderContent(content: string) {
+  const urlPattern = /(https?:\/\/[^\s]+)/g;
+
+  return content.split(/\n\n+/).map((paragraph) => {
+    const parts = paragraph.split(urlPattern);
+    return (
+      <p key={paragraph} className="text-muted-foreground leading-relaxed mb-4">
+        {parts.map((part) =>
+          part.startsWith("http") ? (
+            <a key={part} href={part} target="_blank" rel="noopener noreferrer" className="text-gold hover:text-gold-light transition-colors">
+              {part}
+            </a>
+          ) : (
+            part
+          )
+        )}
+      </p>
+    );
+  });
+}
+
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
   const post = blogPosts.find((p) => p.slug === slug);
@@ -37,7 +58,7 @@ export default function BlogPostPage() {
 
           <div className="prose prose-invert max-w-none">
             <p className="text-lg text-muted-foreground leading-relaxed mb-6">{post.excerpt}</p>
-            <p className="text-muted-foreground leading-relaxed mb-4">{post.content}</p>
+            {renderContent(post.content)}
             <p className="text-muted-foreground leading-relaxed">
               At Endless Infinity Properties, we believe that informed investors make better decisions.
             </p>

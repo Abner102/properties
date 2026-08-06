@@ -12,15 +12,17 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
-    slug: "lagos-real-estate-investment-guide-2026",
-    title: "Lagos Real Estate Investment Guide 2026",
-    excerpt: "Everything you need to know about investing in Lagos property this year, from emerging neighborhoods to ROI expectations.",
-    content: "Lagos remains Nigeria's premier real estate market...",
-    category: "real-estate",
-    image: "/images/blog-1.jpg",
-    author: "Emmanuel Firmin",
-    date: "2026-03-15",
-    readTime: 8,
+    slug: "smfest-abuja-2026-advantagex",
+    title: "SMFest Abuja 2026: AdvantageX",
+    excerpt:
+      "SMFest Abuja 2026 is scheduled for October 16-18, 2026, in Abuja, Nigeria, with the theme AdvantageX.",
+    content:
+      "SMFest Abuja 2026 is scheduled for October 16-18, 2026, in Abuja, Nigeria. Convened by tech entrepreneur Ajah Excel, this flagship digital and tech event centers around the theme AdvantageX, designed to help creators, founders, and entrepreneurs leverage technology and social media for exponential growth.\n\nEvent details: Dates: October 16-18, 2026. Location: Abuja, Nigeria. Theme: AdvantageX (The Exponential Advantage). Convener: Ajah Excel.\n\nTickets and registration: Standard ticket variants range from N15,000 to N250,000, with temporary 50% discount promotions active. Reservations can be secured directly through the Official SMFest Website: https://smfest.org/",
+    category: "technology",
+    image: "/uploads/blog/smfest-abuja-2026.png",
+    author: "Endless Infinity",
+    date: "2026-08-06",
+    readTime: 4,
   },
   {
     slug: "ai-transforming-property-management",

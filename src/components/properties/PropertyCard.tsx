@@ -39,9 +39,11 @@ export default function PropertyCard({ property }: { property: Property }) {
             <Bath size={13} /> {property.bathrooms}
           </span>
         )}
-        <span className="flex items-center gap-1">
-          <Maximize size={13} /> {property.area} sqm
-        </span>
+        {property.area > 0 && (
+          <span className="flex items-center gap-1">
+            <Maximize size={13} /> {property.area} sqm
+          </span>
+        )}
       </div>
     </Link>
   );
